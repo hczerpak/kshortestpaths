@@ -9,7 +9,7 @@ import pl.czerpak.model.graph.Vertex;
 public class GraphFactory {
 
 	/**
-	 * Tworzenie przyk³adowego grafu zorientowanego
+	 * Tworzenie przykï¿½adowego grafu zorientowanego
 	 */
 	public static DirectedGraph graph1() {
 		DirectedGraph g = new DirectedGraph();
@@ -21,8 +21,8 @@ public class GraphFactory {
 
 		g.setSource(vs.get(0));
 
-		g.getSource().getOutgoingEdges().add(new Edge(g.getSource(), vs.get(1), 1.));
-		g.getSource().getOutgoingEdges().add(new Edge(g.getSource(), vs.get(3), 2.));
+		vs.get(0).getOutgoingEdges().add(new Edge(vs.get(0), vs.get(1), 1.));
+		vs.get(0).getOutgoingEdges().add(new Edge(vs.get(0), vs.get(3), 2.));
 		vs.get(1).getOutgoingEdges().add(new Edge(vs.get(1), vs.get(9), 3.));
 		vs.get(1).getOutgoingEdges().add(new Edge(vs.get(1), vs.get(2), 4.));
 		vs.get(3).getOutgoingEdges().add(new Edge(vs.get(3), vs.get(4), 5.));
@@ -38,7 +38,7 @@ public class GraphFactory {
 		vs.get(9).getOutgoingEdges().add(new Edge(vs.get(9), vs.get(10), 15.));
 
 		g.setTarget(vs.get(10));
-		create(g, g.getSource());
+		create(g, vs.get(0));
 
 		return g;
 	}

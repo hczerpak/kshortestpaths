@@ -9,20 +9,22 @@ import pl.czerpak.model.graph.Edge;
 import pl.czerpak.model.graph.Path;
 import pl.czerpak.model.graph.Vertex;
 
-public class BranchsEquivalenceClass extends EquivalenceClass {
+public class BranchEquivalenceClass extends EquivalenceClass {
 
 	private Branch parentBranch;
+	private Path shortestPath = null;
 
 	private Path replacementBasePath;
 
-	public BranchsEquivalenceClass(AlgorithmType algorithmType, DirectedGraph subgraph, Path replacementBasePath, Branch parentBranch) {
+	public BranchEquivalenceClass(AlgorithmType algorithmType, DirectedGraph subgraph, Path replacementBasePath, Branch parentBranch) {
 		super(algorithmType, subgraph);
 		this.replacementBasePath = replacementBasePath;
 		this.parentBranch = parentBranch;
 	}
 
 	@Override
-	public void modifyPathBranchingStructure(PathBranchingStructure pbs, Path shortestPathP) {
+	public void modifyPathBranchingStructure(PathBranchingStructure pbs) {
+		if (shortestPath == null) getShortestPath();
 		/**
 		 * (a) Let w be the vertex where P branches off from branchPath(u, v)*
 		 */
@@ -33,12 +35,12 @@ public class BranchsEquivalenceClass extends EquivalenceClass {
 		Path pathWTp = new Path();
 		Path branchPath = parentBranch.getBranchPath();
 
-		// przygl¹damy siê kolejnym elementom P i branchPath do momentu
-		// kiedy P pójdzie
-		// w inn¹ stronê, od razu tworz¹c œcie¿ki potrzebne w nastêpnym
+		// przyglï¿½damy siï¿½ kolejnym elementom P i branchPath do momentu
+		// kiedy P pï¿½jdzie
+		// w innï¿½ stronï¿½, od razu tworzï¿½c ï¿½cieï¿½ki potrzebne w nastï¿½pnym
 		// kroku
 		for (int j = 0; j < branchPath.getEdgesSequence().size(); j++) {
-			Edge edgeFromP = shortestPathP.getEdgesSequence().get(j);
+			Edge edgeFromP = shortestPath.getEdgesSequence().get(j);
 			Edge edgeFromBranchPath = branchPath.getEdgesSequence().get(j);
 
 			if (edgeFromP != edgeFromBranchPath)
@@ -93,21 +95,21 @@ public class BranchsEquivalenceClass extends EquivalenceClass {
 		 * equivalence classes C(u, w), C(w, v), C(w, tp), and C(w), depending
 		 * on where they branch from branchPath(u, v) and/or P.
 		 **********************************************************************/
-		// i znowu redystrybucja jest umowna (nie ma) poniewa¿ nie mamy
-		// œcie¿ek jawnie okreœlonych
-		BranchsEquivalenceClass equivalenceClassUW = new BranchsEquivalenceClass(
+		// i znowu redystrybucja jest umowna (nie ma) poniewaï¿½ nie mamy
+		// ï¿½cieï¿½ek jawnie okreï¿½lonych
+		BranchEquivalenceClass equivalenceClassUW = new BranchEquivalenceClass(
 				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph.clone(), pathUW, branchUW);
 		branchUW.setEquivalenceClass(equivalenceClassUW);
 
-		BranchsEquivalenceClass equivalenceClassWV = new BranchsEquivalenceClass(
+		BranchEquivalenceClass equivalenceClassWV = new BranchEquivalenceClass(
 				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph.clone(), pathWV, branchWV);
 		branchWV.setEquivalenceClass(equivalenceClassWV);
 
-		BranchsEquivalenceClass equivalenceClassWTp = new BranchsEquivalenceClass(
+		BranchEquivalenceClass equivalenceClassWTp = new BranchEquivalenceClass(
 				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph.clone(), pathWTp, branchWTp);
 		branchWTp.setEquivalenceClass(equivalenceClassWTp);
 
-		NodesEquivalenceClass equivalenceClassW = new NodesEquivalenceClass(
+		NodeEquivalenceClass equivalenceClassW = new NodeEquivalenceClass(
 				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph.clone(), wNode);
 
 		newClasses = new ArrayList<EquivalenceClass>();
@@ -149,6 +151,8 @@ public class BranchsEquivalenceClass extends EquivalenceClass {
 		if (replacement != null)
 			replacement.setParentEquivalenceClass(this);
 
+		shortestPath = replacement;
+		
 		return replacement;
 	}
 }

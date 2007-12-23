@@ -98,23 +98,20 @@ public class DijkstraTestCase extends TestCase {
 		
 		assertTrue(vs.get(0).getName().equals(edges.get(0).getSource().getName()));
 		assertTrue(vs.get(1).getName().equals(edges.get(0).getTarget().getName()));
-		assertEquals(4, edges.size());
+		assertEquals(3, edges.size());
 		assertEquals(1., edges.get(0).getWeight());
 		assertEquals(2., edges.get(1).getWeight());
 		assertEquals(3., edges.get(2).getWeight());
-		assertEquals(4., edges.get(3).getWeight());
 		
 		Path path = dijkstra.getShortestPath();
 		edges = path.getEdgesSequence();
 		
 		assertTrue(vs.get(0).getName().equals(edges.get(0).getSource().getName()));
-		assertTrue(vs.get(1).getName().equals(edges.get(0).getTarget().getName()));
-		assertEquals(4., edges.size());
+		assertTrue(vs.get(2).getName().equals(edges.get(0).getTarget().getName()));
+		assertEquals(2, edges.size());
 		assertEquals(1., edges.get(0).getWeight());
 		assertEquals(2., edges.get(1).getWeight());
-		assertEquals(3., edges.get(2).getWeight());
-		assertEquals(4., edges.get(3).getWeight());
 		
-		assertEquals(10., path.getWeight());
+		assertEquals(3., path.getWeight());
 	}
 }

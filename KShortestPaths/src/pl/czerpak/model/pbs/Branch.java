@@ -10,6 +10,10 @@ public class Branch {
 
 	private Node target;
 
+	/** 
+	 * Ścieżka od source do target
+	 * 
+	 * **/
 	private Path branchPath;
 
 	public Branch() {

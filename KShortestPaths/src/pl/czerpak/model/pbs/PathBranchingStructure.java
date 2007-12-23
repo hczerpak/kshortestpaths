@@ -1,35 +1,42 @@
 package pl.czerpak.model.pbs;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PathBranchingStructure {
 	private Node root; // Korzen drzewa pbs
 
-	private List<Node> nodes; // zbior wszystkich wezlow drzewa pbs
+	private Set<Node> nodes; // zbior wszystkich wezlow drzewa pbs
 
-	private List<Branch> branches; // zbior wszystkich galezi drzewa
+	private Set<Branch> branches; // zbior wszystkich galezi drzewa
 
+	public PathBranchingStructure() {
+		nodes = new HashSet<Node>();
+		branches = new HashSet<Branch>();
+	}
+	
 	public Node getRoot() {
 		return root;
 	}
 
 	public void setRoot(Node root) {
 		this.root = root;
+		nodes.add(root);
 	}
 
-	public List<Node> getNodes() {
+	public Set<Node> getNodes() {
 		return nodes;
 	}
 
-	public void setNodes(List<Node> nodes) {
+	public void setNodes(Set<Node> nodes) {
 		this.nodes = nodes;
 	}
 
-	public List<Branch> getBranches() {
+	public Set<Branch> getBranches() {
 		return branches;
 	}
 
-	public void setBranches(List<Branch> branches) {
+	public void setBranches(Set<Branch> branches) {
 		this.branches = branches;
 	}
 

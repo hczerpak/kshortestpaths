@@ -8,17 +8,20 @@ import pl.czerpak.model.graph.DirectedGraph;
 import pl.czerpak.model.graph.Edge;
 import pl.czerpak.model.graph.Path;
 
-public class NodesEquivalenceClass extends EquivalenceClass {
+public class NodeEquivalenceClass extends EquivalenceClass {
 
 	private Node parentNode;
+	private Path shortestPath = null;
 
-	public NodesEquivalenceClass(AlgorithmType algorithmType, DirectedGraph subgraph, Node parentNode) {
+	public NodeEquivalenceClass(AlgorithmType algorithmType, DirectedGraph subgraph, Node parentNode) {
 		super(algorithmType, subgraph);
 		this.parentNode = parentNode;
 	}
 
 	@Override
-	public void modifyPathBranchingStructure(PathBranchingStructure pbs, Path shortestPathP) {
+	public void modifyPathBranchingStructure(PathBranchingStructure ti) {
+		if (shortestPath == null) getShortestPath();
+		
 		/**
 		 * (a) Add a new branch (u, tp) to T that represents the suffix of P
 		 * after u *
@@ -32,17 +35,18 @@ public class NodesEquivalenceClass extends EquivalenceClass {
 		newBranch.setSource(parentNode);
 		newBranch.setTarget(tpNode);
 		// represents the suffix of P after u
-		newBranch.setBranchPath(shortestPathP.subPathByVertex(parentNode.getVertex()));
+		newBranch.setBranchPath(shortestPath.subPathByVertex(parentNode.getVertex()));
 
 		// Add a new branch (u, tp) to T
 		parentNode.getOutgoingBranches().add(newBranch);
+		ti.getBranches().add(newBranch);
 
 		/***********************************************************************
 		 * (b) Remove from C(u) the paths that share at least one edge with P
 		 * after u and put all of them except P into the newly created
 		 * equivalence class C(u, tp)
 		 **********************************************************************/
-		BranchsEquivalenceClass newEqClass = new BranchsEquivalenceClass(AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph, shortestPathP, newBranch);
+		BranchEquivalenceClass newEqClass = new BranchEquivalenceClass(AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph, shortestPath, newBranch);
 		newBranch.setEquivalenceClass(newEqClass);
 
 		newClasses = new ArrayList<EquivalenceClass>();
@@ -51,7 +55,8 @@ public class NodesEquivalenceClass extends EquivalenceClass {
 
 	@Override
 	public Path getShortestPath() {
-
+		if (shortestPath != null) return shortestPath;
+		
 		Edge edge;
 		/***********************************************************************
 		 * We obtain graph H by deleting from G all the vertices in
@@ -77,6 +82,7 @@ public class NodesEquivalenceClass extends EquivalenceClass {
 		 **********************************************************************/
 		Dijkstra d = new Dijkstra(graph);
 		d.getShortestPath().setParentEquivalenceClass(this);
+		shortestPath = d.getShortestPath();
 		return d.getShortestPath();
 	}
 }

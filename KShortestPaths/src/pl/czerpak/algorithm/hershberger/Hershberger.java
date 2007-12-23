@@ -9,7 +9,7 @@ import pl.czerpak.model.graph.DirectedGraph;
 import pl.czerpak.model.graph.Path;
 import pl.czerpak.model.pbs.EquivalenceClass;
 import pl.czerpak.model.pbs.Node;
-import pl.czerpak.model.pbs.NodesEquivalenceClass;
+import pl.czerpak.model.pbs.NodeEquivalenceClass;
 import pl.czerpak.model.pbs.PathBranchingStructure;
 
 public class Hershberger {
@@ -26,7 +26,6 @@ public class Hershberger {
 
 	public Hershberger(DirectedGraph graph, int k, List<Path> resultsContainer) {
 		heap = new FibonacciHeap<Path>();
-		ti = new PathBranchingStructure();
 		this.graph = graph;
 		this.resultsContainer = resultsContainer;
 		this.k = k;
@@ -42,7 +41,7 @@ public class Hershberger {
 		s.setVertex(graph.getSource());
 		// There is one equivalence class C(s) initially, which corresponds to
 		// all s-t paths.
-		EquivalenceClass initialEquivalenceClass = new NodesEquivalenceClass(EquivalenceClass.AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph, s);
+		EquivalenceClass initialEquivalenceClass = new NodeEquivalenceClass(EquivalenceClass.AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph, s);
 
 		// Initialize path branching structure T...
 		ti = new PathBranchingStructure();
@@ -66,7 +65,7 @@ public class Hershberger {
 			 */
 			Path p = heap.extractMinimumEntry();
 
-			// jeœli zabrak³o œcie¿ek
+			// jeï¿½li zabrakï¿½o ï¿½cieï¿½ek
 			if (p == null) {
 				System.out.println("Not enough paths in graph.\n");
 				break;
@@ -83,7 +82,7 @@ public class Hershberger {
 			 * branch (u, v))
 			 ******************************************************************/
 
-			pClass.modifyPathBranchingStructure(ti, p);
+			pClass.modifyPathBranchingStructure(ti);
 			changedOrCreatedClasses.addAll(pClass.getNewEquivalenceClasses());
 
 			/*******************************************************************

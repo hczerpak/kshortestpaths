@@ -32,5 +32,5 @@ public abstract class EquivalenceClass {
 	
 	public abstract Path getShortestPath();
 	
-	public abstract void modifyPathBranchingStructure(PathBranchingStructure pbs, Path shortestPathP);
+	public abstract void modifyPathBranchingStructure(PathBranchingStructure pbs);
 }

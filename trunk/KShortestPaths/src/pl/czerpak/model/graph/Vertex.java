@@ -3,6 +3,8 @@ package pl.czerpak.model.graph;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+
 public class Vertex {
 	private static int counter = 0;
 
@@ -29,5 +31,10 @@ public class Vertex {
 
 	public String getName() {
 		return name;
+	}
+	
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this);
 	}
 }

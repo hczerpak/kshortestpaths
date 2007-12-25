@@ -137,7 +137,8 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 		/** ...including a * */
 		graph.getVerticles().remove(parentBranch.getBranchPath().getLeadEdge().getSource());
 		graph.setSource(parentBranch.getBranchPath().getLeadEdge().getTarget());
-	
+		replacementBasePath = replacementBasePath.subPath(graph.getSource());
+		
 		Path replacement = null;
 		switch (algorithmType) {
 			case ALGORITHM_TYPE_REPLACEMENT :

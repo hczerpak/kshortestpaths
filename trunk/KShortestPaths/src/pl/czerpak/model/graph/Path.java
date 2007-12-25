@@ -102,83 +102,87 @@ public class Path {
 	// UTIL BLOCK
 
 	/**
-	 * Zwraca podœcie¿kê o podanym pocz¹tkowej i koñcowej krawêdzi w³¹czaj¹c
-	 * obydwie krawêdzie do wynikowej œcie¿ki < ., .>
+	 * Zwraca podï¿½cieï¿½kï¿½ o podanym poczï¿½tkowej i koï¿½cowej krawï¿½dzi wï¿½ï¿½czajï¿½c
+	 * obydwie krawï¿½dzie do wynikowej ï¿½cieï¿½ki < ., .>
 	 * 
 	 * @param startEdge
 	 * @param endEdge
-	 * @return podœcie¿ka
+	 * @return podï¿½cieï¿½ka
 	 * 
 	 */
 	public Path subPath(Edge startEdge, Edge endEdge) {
 		int startIndex = 0;
 		int endIndex = 0;
 
-		// koniec œcie¿ki to ostatnia krawêdŸ jeœli nie zdefiniowano koñca
-		// bezpoœrednio
+		// if endEdge == null last edge is taken as end
 		if (endEdge == null)
 			endIndex = -1;
 		else
 			while (edgesSequence.get(endIndex) != endEdge && endIndex < edgesSequence.size() - 1)
 				endIndex++;
 
-		// wyszukanie krawêdzi pocz¹tkowej
+		// searching for starting edge
 		while (edgesSequence.get(startIndex) != startEdge && startIndex < edgesSequence.size() - 1)
 			startIndex++;
 
-		// jeœli siê skoñczy³a œcie¿ka i nie ma koñcowej to b³êdne parametry i
-		// zwraca b³¹d
+		// jeï¿½li siï¿½ skoï¿½czyï¿½a ï¿½cieï¿½ka i nie ma koï¿½cowej to bï¿½ï¿½dne parametry i
+		// zwraca bï¿½ï¿½d
 		if (startIndex == edgesSequence.size())
-			throw new IllegalArgumentException("Nie znaleziono ostatniej krawêdzi");
+			throw new IllegalArgumentException("No starting edge");
 
-		return subPathByIndex(startIndex, endIndex);
+		return subPath(startIndex, endIndex);
 	}
 
 	/**
-	 * Buduje podœcie¿kê zaczynaj¹c od podanego wierzcho³ka
+	 * Buduje podï¿½cieï¿½kï¿½ zaczynajï¿½c od podanego wierzchoï¿½ka
 	 * 
 	 * @param startingVertex
 	 * @return
 	 * 
 	 */
-	public Path subPathByVertex(Vertex startingVertex) {
-		int startIndex = 0;
+	public Path subPath(Vertex startingVertex) {
+		int i = 0;
 
-		for (int i = 0; i < edgesSequence.size(); i++)
+		for (; i < edgesSequence.size(); i++)
 			if (edgesSequence.get(i).getSource() == startingVertex)
 				break;
 
-		return subPathByIndex(startIndex);
+		return subPath(i);
 	}
 
 	/**
-	 * Buduje podœcie¿kê zaczynaj¹c od podanego indeksu krawêdzi do koñca lub do
-	 * krawêdzi podanej jako koniec.
+	 * Buduje podï¿½cieï¿½kï¿½ zaczynajï¿½c od podanego indeksu krawï¿½dzi do koï¿½ca lub do
+	 * krawï¿½dzi podanej jako koniec.
 	 * 
 	 * @param startIndex
 	 * @param endIndex
 	 * @return
 	 * 
 	 */
-	public Path subPathByIndex(int startIndex, int endIndex) {
+	public Path subPath(int startIndex, int endIndex) {
 		Path subp = new Path();
 
 		if (endIndex == -1)
 			endIndex = edgesSequence.size() - 1;
 
-		// przepisywanie sekwencji krawêdzi do obiektu podœcie¿ki
+		// copy references to new edge sequence
 		for (int i = startIndex; i < endIndex + 1; i++)
 			subp.edgesSequence.add(edgesSequence.get(i));
-
+		
+		//set source and target
+		if (subp.edgesSequence.size() > 0) {
+			subp.source = subp.edgesSequence.get(0).getSource();
+			subp.target = subp.edgesSequence.get(subp.edgesSequence.size() - 1).getTarget();
+		}
 		return subp;
 	}
 
-	public Path subPathByIndex(int startIndex) {
-		return subPathByIndex(startIndex, -1);
+	public Path subPath(int startIndex) {
+		return subPath(startIndex, -1);
 	}
 
 	/**
-	 * Konkatenuje dwie œcie¿ki
+	 * Konkatenuje dwie ï¿½cieï¿½ki
 	 * 
 	 * @param path
 	 * @return

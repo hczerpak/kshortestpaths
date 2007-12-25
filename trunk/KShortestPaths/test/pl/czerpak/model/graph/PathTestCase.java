@@ -9,8 +9,6 @@ public class PathTestCase extends TestCase {
 	
 	private Path p;
 	
-	
-	
 	protected void setUp() throws Exception {
 		DirectedGraph g = new DirectedGraph();
 		List<Vertex> vs = g.getVerticles();
@@ -52,40 +50,62 @@ public class PathTestCase extends TestCase {
 	public void testSubPathEdgeEdge() {
 
 		Path subp = p.subPath(p.getLeadEdge(), null);
-		assertEquals(p.getEdgesSequence().size(), subp.getEdgesSequence().size());
+		assertEquals(p.getLength(), subp.getLength());
 		
-		subp = p.subPath(p.getEdgesSequence().get(0), p.getEdgesSequence().get(p.getEdgesSequence().size() - 1));
-		assertEquals(p.getEdgesSequence().size(), subp.getEdgesSequence().size());
+		subp = p.subPath(p.getEdgesSequence().get(0), p.getEdgesSequence().get(p.getLength() - 1));
+		assertEquals(p.getLength(), subp.getLength());
 		
 		subp = p.subPath(p.getEdgesSequence().get(1), null);
-		assertEquals(p.getEdgesSequence().size() - 1, subp.getEdgesSequence().size());
+		assertEquals(p.getLength() - 1, subp.getLength());
 		
-		subp = p.subPath(p.getEdgesSequence().get(1), p.getEdgesSequence().get(p.getEdgesSequence().size() - 1));
-		assertEquals(p.getEdgesSequence().size() - 1, subp.getEdgesSequence().size());
+		subp = p.subPath(p.getEdgesSequence().get(1), p.getEdgesSequence().get(p.getLength() - 1));
+		assertEquals(p.getLength() - 1, subp.getLength());
 		
-		subp = p.subPath(p.getEdgesSequence().get(1), p.getEdgesSequence().get(p.getEdgesSequence().size() - 2));
-		assertEquals(p.getEdgesSequence().size() - 2, subp.getEdgesSequence().size());
+		subp = p.subPath(p.getEdgesSequence().get(1), p.getEdgesSequence().get(p.getLength() - 2));
+		assertEquals(p.getLength() - 2, subp.getLength());
 	}
 
 	public void testSubPathByVertex() {
+
+		Path subp = p.subPath(p.getLeadEdge().getSource());
+		assertEquals(p.getLength(), subp.getLength());
 		
-		
-		fail("Not yet implemented"); // TODO
+		subp = p.subPath(p.getEdgesSequence().get(0).getTarget());
+		assertEquals(p.getLength() - 1, subp.getLength());
 	}
 
 	public void testSubPathByIndexIntInt() {
-		Path subp = p.subPath(0, p.getEdgesSequence().size() - 1);
-		assertEquals(subp.getEdgesSequence().size(), p.getEdgesSequence().size());
+		Path subp = p.subPath(0, p.getLength() - 1);
+		assertEquals(subp.getLength(), p.getLength());
 		
-		fail("Not yet implemented"); // TODO
+		subp = p.subPath(1, p.getLength() - 1);
+		assertEquals(p.getLength() - 1, subp.getLength());
+		
+		subp = p.subPath(1, 3);
+		assertEquals(2, subp.getLength());
 	}
 
 	public void testSubPathByIndexInt() {
-		fail("Not yet implemented"); // TODO
+		Path subp = p.subPath(0);
+		assertEquals(subp.getLength(), p.getLength());
+		
+		subp = p.subPath(1);
+		assertEquals(p.getLength() - 1, subp.getLength());
+		
+		subp = p.subPath(3);
+		assertEquals(p.getLength() - 3, subp.getLength());
 	}
 
 	public void testConcat() {
-		fail("Not yet implemented"); // TODO
+		Path part1, part2;
+		
+		part1 = p.subPath(0, 3);
+		part2 = p.subPath(3, p.getLength());
+		
+		Path sum = part1.concat(part2);
+		
+		assertEquals(p.getLength(), sum.getLength());
+		assertEquals(part1.getLength() + part2.getLength(), sum.getLength());
 	}
 
 }

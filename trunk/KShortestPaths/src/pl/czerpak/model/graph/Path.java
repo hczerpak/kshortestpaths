@@ -55,6 +55,13 @@ public class Path {
 	public void setWeight(Double weight) {
 		this.weight = weight;
 	}
+	
+	/**
+	 * @return length of edgeSequence list
+	 */
+	public int getLength() {
+		return edgesSequence.size();
+	}
 
 	public List<Edge> getEdgesSequence() {
 		return edgesSequence;

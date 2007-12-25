@@ -50,12 +50,12 @@ public class DirectedGraph {
 		this.source = source;
 	}
 
-	/** Iloœæ wierzcho³ków w grafie * */
+	/** Iloï¿½ï¿½ wierzchoï¿½kï¿½w w grafie * */
 	public int n() {
 		return verticles.size();
 	}
 
-	/** Iloœæ krawêdzi w grafie * */
+	/** Iloï¿½ï¿½ krawï¿½dzi w grafie * */
 	public int m() {
 		return edges.size();
 	}
@@ -77,7 +77,7 @@ public class DirectedGraph {
 		for (int i = 0; i < edges.size(); i++) {
 			edge = edges.get(i);
 			temp = edge.getSource();
-			edge.setSource(target);
+			edge.setSource(edge.getTarget());
 			edge.setTarget(temp);
 		}
 	}

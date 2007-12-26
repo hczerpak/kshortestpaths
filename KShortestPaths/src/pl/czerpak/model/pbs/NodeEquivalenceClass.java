@@ -40,6 +40,8 @@ public class NodeEquivalenceClass extends EquivalenceClass {
 		// Add a new branch (u, tp) to T
 		parentNode.getOutgoingBranches().add(newBranch);
 		ti.getBranches().add(newBranch);
+		ti.getNodes().add(parentNode);
+		ti.getNodes().add(tpNode);
 
 		/***********************************************************************
 		 * (b) Remove from C(u) the paths that share at least one edge with P

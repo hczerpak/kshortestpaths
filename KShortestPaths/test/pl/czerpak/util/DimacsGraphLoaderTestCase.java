@@ -1,7 +1,6 @@
 package pl.czerpak.util;
 
 import java.io.EOFException;
-import java.io.File;
 
 import junit.framework.TestCase;
 
@@ -15,8 +14,7 @@ public class DimacsGraphLoaderTestCase extends TestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		graphLoader = new DimacsGraphLoader("D:" + File.separator + "workspace mgr" + File.separator + "KShortestPaths" + File.separator + "src" + File.separator + "pl"
-				+ File.separator + "czerpak" + File.separator + "resources" + File.separator + "USA-road-d.NY.gr");
+		graphLoader = new DimacsGraphLoader("USA-road-d.NY.gr");
 	}
 
 	@After

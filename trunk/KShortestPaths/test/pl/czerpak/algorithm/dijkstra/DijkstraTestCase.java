@@ -114,4 +114,26 @@ public class DijkstraTestCase extends TestCase {
 		
 		assertEquals(3., path.getWeight());
 	}
+	
+	public void testCreateShortestPathTree() {
+		graph = GraphFactory.graph1();
+		
+		ShortestPathTree spiderX = new Dijkstra(graph).createShortestPathTree();
+
+		assertEquals(graph.getSource().getName(), spiderX.getRoot().getVertex().getName());
+		
+		graph.reverseEdges();
+		
+		assertEquals(graph.getTarget().getName(), spiderX.getRoot().getVertex().getName());
+		
+		ShortestPathTree spiderY = new Dijkstra(graph).createShortestPathTree();
+		
+		assertEquals(graph.getSource().getName(), spiderY.getRoot().getVertex().getName());
+		
+		graph.reverseEdges();
+		
+		assertEquals(graph.getTarget().getName(), spiderY.getRoot().getVertex().getName());
+		
+		
+	}
 }

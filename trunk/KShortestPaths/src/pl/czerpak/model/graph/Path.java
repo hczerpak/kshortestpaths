@@ -161,8 +161,10 @@ public class Path {
 	 * Buduje pod�cie�k� zaczynaj�c od podanego indeksu kraw�dzi do ko�ca lub do
 	 * kraw�dzi podanej jako koniec.
 	 * 
-	 * @param startIndex
-	 * @param endIndex
+	 * Threshold is sharp <startIndex, endIndex>
+	 * 
+	 * @param startIndex Indeks startowej KRAWĘDZI
+	 * @param endIndex Indeks końcowej KRAWĘDZI
 	 * @return
 	 * 
 	 */
@@ -189,7 +191,7 @@ public class Path {
 	}
 
 	/**
-	 * Konkatenuje dwie �cie�ki
+	 * Concats two paths
 	 * 
 	 * @param path
 	 * @return

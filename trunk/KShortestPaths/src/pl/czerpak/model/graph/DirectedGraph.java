@@ -80,6 +80,9 @@ public class DirectedGraph {
 			edge.setSource(edge.getTarget());
 			edge.setTarget(temp);
 		}
+		temp = source;
+		source = target;
+		target = temp;
 	}
 
 	public String toString() {

@@ -10,8 +10,7 @@ public class PathTestCase extends TestCase {
 	private Path p;
 	
 	protected void setUp() throws Exception {
-		DirectedGraph g = new DirectedGraph();
-		List<Vertex> vs = g.getVerticles();
+		List<Vertex> vs = new ArrayList<Vertex>();
 
 		// 10 wierzchołków
 		for (int i = 0; i < 11; i++)
@@ -34,6 +33,8 @@ public class PathTestCase extends TestCase {
 		vs.get(7).getOutgoingEdges().add(e = new Edge(vs.get(7), vs.get(8), 13.)); edgesList.add(e);
 		vs.get(8).getOutgoingEdges().add(e = new Edge(vs.get(8), vs.get(9), 14.)); edgesList.add(e);
 		vs.get(9).getOutgoingEdges().add(e = new Edge(vs.get(9), vs.get(10), 15.)); edgesList.add(e);
+	
+		p = new Path(edgesList, vs.get(0), vs.get(10));
 	}
 
 	protected void tearDown() throws Exception {
@@ -82,7 +83,7 @@ public class PathTestCase extends TestCase {
 		assertEquals(p.getLength() - 1, subp.getLength());
 		
 		subp = p.subPath(1, 3);
-		assertEquals(2, subp.getLength());
+		assertEquals(3, subp.getLength());
 	}
 
 	public void testSubPathByIndexInt() {
@@ -100,7 +101,7 @@ public class PathTestCase extends TestCase {
 		Path part1, part2;
 		
 		part1 = p.subPath(0, 3);
-		part2 = p.subPath(3, p.getLength());
+		part2 = p.subPath(4, p.getLength() - 1);
 		
 		Path sum = part1.concat(part2);
 		

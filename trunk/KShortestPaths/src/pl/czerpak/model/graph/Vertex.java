@@ -8,16 +8,16 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 public class Vertex {
 	private static int counter = 0;
 
-	private String name;
+	private long id;
 
 	private List<Edge> outgoingEdges;
 
 	public Vertex() {
-		this("Vertex" + counter++);
+		outgoingEdges = new ArrayList<Edge>();
+		id = counter++;
 	}
 
 	public Vertex(String name) {
-		this.name = name;
 		this.outgoingEdges = new ArrayList<Edge>();
 	}
 
@@ -30,11 +30,15 @@ public class Vertex {
 	}
 
 	public String getName() {
-		return name;
+		return "Vertex" + id;
 	}
 	
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this);
+	}
+
+	public long getId() {
+		return id;
 	}
 }

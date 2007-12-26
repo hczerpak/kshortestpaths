@@ -40,7 +40,7 @@ public class Replacement {
 
 		graph.reverseEdges();
 
-		spiderY.createMinblocks(xShortestPath);
+		//spiderY.createMinblocks(xShortestPath);
 		
 		Heap<Path> heap = new FibonacciHeap<Path>();
 

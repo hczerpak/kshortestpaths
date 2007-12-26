@@ -30,8 +30,8 @@ public class NodeEquivalenceClassTestCase extends TestCase {
 		Path path = eq.getShortestPath();
 		List<Edge> edges = path.getEdgesSequence();
 		
-		assertTrue(g.getVerticles().get(0).getName().equals(edges.get(0).getSource().getName()));
-		assertTrue(g.getVerticles().get(2).getName().equals(edges.get(0).getTarget().getName()));
+		assertEquals(g.getVerticles().get(0).getName(), edges.get(0).getSource().getName());
+		assertEquals(g.getVerticles().get(2).getName(), edges.get(0).getTarget().getName());
 		assertEquals(2, edges.size());
 		assertEquals(1., edges.get(0).getWeight());
 		assertEquals(2., edges.get(1).getWeight());

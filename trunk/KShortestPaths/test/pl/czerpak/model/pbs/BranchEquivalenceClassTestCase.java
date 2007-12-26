@@ -17,13 +17,13 @@ public class BranchEquivalenceClassTestCase extends TestCase {
 		DirectedGraph g = GraphFactory.graph1();
 		s.setVertex(g.getSource());
 	
-		EquivalenceClass eq = new NodeEquivalenceClass(AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, g, s);
+		NodeEquivalenceClass eq = new NodeEquivalenceClass(AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, g, s);
 
 		PathBranchingStructure ti = new PathBranchingStructure();
 		ti.setRoot(s);
 		eq.modifyPathBranchingStructure(ti);
 		
-		EquivalenceClass eq2 = new BranchEquivalenceClass(
+		BranchEquivalenceClass eq2 = new BranchEquivalenceClass(
 				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, 
 				eq.getGraphCopy(), 
 				eq.getShortestPath(), 
@@ -33,8 +33,8 @@ public class BranchEquivalenceClassTestCase extends TestCase {
 		
 		List<Edge> edges = shortestPath.getEdgesSequence();
 		
-		assertTrue(g.getVerticles().get(0).getName().equals(edges.get(0).getSource().getName()));
-		assertTrue(g.getVerticles().get(2).getName().equals(edges.get(0).getTarget().getName()));
+		assertEquals(g.getVerticles().get(0).getName(), edges.get(0).getSource().getName());
+		assertEquals(g.getVerticles().get(2).getName(), edges.get(0).getTarget().getName());
 		assertEquals(5, edges.size());
 		assertEquals(1., edges.get(0).getWeight());
 		assertEquals(4., edges.get(1).getWeight());

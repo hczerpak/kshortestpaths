@@ -56,14 +56,12 @@ public class Replacement {
 			 * E\ei such that a and b are in different components of Xi, with a
 			 * in the same component as x.
 			 */
-			// uzupe³nij ei o nowe krawêdzie, których Ÿród³em jest a
-			for (Edge edge : cutEdge.getSource().getOutgoingEdges()) {
-				if (edge == cutEdge)
-					continue;
-				
+			// add to Ei edges with source set to a
+			for (Edge edge : cutEdge.getSource().getOutgoingEdges()) 
 				setEi.add(edge);
-			}
-			// usun z ei krawedzie, których celem jest a
+			setEi.remove(cutEdge);
+			
+			// remove from Ei edges with target set to a
 			for (Edge edge : setEi) {
 				if (edge.getTarget() == cutEdge.getTarget())
 					setEi.remove(edge);

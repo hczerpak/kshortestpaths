@@ -73,13 +73,13 @@ public class ShortestPathTree {
 	}
 
 	/**
-	 * Mój sposób na implementacjê preorder.
+	 * MÃ³j sposÃ³b na implementacjÄ™ preorder.
 	 * 
-	 * Zaczynaj¹c od korzenia oznaczamy wszystkie elementy na drzewie. Obok jest przygotowany stos
-	 * wierzcho³ków grafu. Przy ka¿dym przejœciu ni¿ej wzd³u¿ najkrótszej œcie¿ki path(x, y) zdejmowany jest
-	 * ze stosu jeden wierzcho³ek by wiedzieæ, gdzie spoœród potomków wêz³a mamy zejœæ aby pod¹¿aæ
-	 * w³aœciw¹ drog¹. Kiedy schodzimy œcie¿k¹ za ka¿dym razem zmniejszamy wartoœæ low i ustawiamy j¹ dla
-	 * wszystkich potomków (z wyj¹tkiem tego, do którego pod¹¿ymy w dó³). w ten sposób nie trzeba sprawdzaæ
+	 * ZaczynajÄ…c od korzenia oznaczamy wszystkie elementy na drzewie. Obok jest przygotowany stos
+	 * wierzchoÅ‚kÃ³w grafu. Przy kaÅ¼dym przejÅ›ciu niÅ¼ej wzdÅ‚uÅ¼ najkrÃ³tszej Å›cieÅ¼ki path(x, y) zdejmowany jest
+	 * ze stosu jeden wierzchoÅ‚ek by wiedzieÄ‡, gdzie spoÅ›rÃ³d potomkÃ³w wÄ™zÅ‚a mamy zejÅ›Ä‡ aby podÄ…Å¼aÄ‡
+	 * wÅ‚aÅ›ciwÄ… drogÄ…. Kiedy schodzimy Å›cieÅ¼kÄ… za kaÅ¼dym razem zmniejszamy wartoÅ›Ä‡ low i ustawiamy jÄ… dla
+	 * wszystkich potomkÃ³w (z wyjÄ…tkiem tego, do ktÃ³rego podÄ…Å¼ymy w dÃ³Å‚). w ten sposÃ³b nie trzeba sprawdzaÄ‡
 	 * warunku minblock(u) = min(block(u), minblock(v))
 	 * 
 	 * @param shortestPath
@@ -106,14 +106,23 @@ public class ShortestPathTree {
 		DijkstraTreeElement next = null;
 		Vertex vertex = vstack.pop();
 		for (DijkstraTreeElement child : r.getChildren()) {
+			//if child represents previous vertex in path
 			if (child.getVertex() == vertex) {
 				next = child;
 				continue;
 			}
+			
+			//if map contains certain key, update its lowValue
+			if (low.containsKey(child.getVertex()))
+				low.remove(child.getVertex());
 			low.put(child.getVertex(), lowValue);
+			
 			preorder(vstack, child, lowValue);
 		}
-		preorder(vstack, next, lowValue - 1);
+		
+		//process next item with lower value
+		if (next != null)
+			preorder(vstack, next, lowValue - 1);
 	}
 
 	/**
@@ -123,7 +132,8 @@ public class ShortestPathTree {
 	 * @return
 	 */
 	public boolean isValid(Edge e, int i) {
-		if (e.getTarget() != null && low.containsKey(e.getTarget()) && low.get(e.getTarget()) > i)
+		if (e.getTarget() != null && low.containsKey(e.getTarget()) && 
+				low.get(e.getTarget()) > i)
 			return true;
 		
 		return false;

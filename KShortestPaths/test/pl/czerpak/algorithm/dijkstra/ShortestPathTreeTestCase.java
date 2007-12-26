@@ -48,4 +48,35 @@ public class ShortestPathTreeTestCase extends TestCase {
 		assertEquals(3., tree.getPathFromRoot(vs.get(7)).getWeight());
 		
 	}
+	
+	public void testCreateShortestPathTree() {
+		DirectedGraph g = GraphFactory.graph1();
+		Dijkstra dijkstra = new Dijkstra(g);
+		ShortestPathTree tree = dijkstra.createShortestPathTree();
+
+		assertEquals(g.getSource().getId(), tree.getRoot().getVertex().getId());
+
+		assertEquals(0, tree.getPathFromRoot(g.getVerticles().get(0)).getLength());
+		assertEquals(1, tree.getPathFromRoot(g.getVerticles().get(1)).getLength());
+		assertEquals(2, tree.getPathFromRoot(g.getVerticles().get(2)).getLength());
+		assertEquals(1, tree.getPathFromRoot(g.getVerticles().get(3)).getLength());
+		assertEquals(2, tree.getPathFromRoot(g.getVerticles().get(4)).getLength());
+		assertEquals(3, tree.getPathFromRoot(g.getVerticles().get(5)).getLength());
+		assertEquals(3, tree.getPathFromRoot(g.getVerticles().get(6)).getLength());
+		assertEquals(4, tree.getPathFromRoot(g.getVerticles().get(7)).getLength());
+		assertEquals(3, tree.getPathFromRoot(g.getVerticles().get(8)).getLength());
+		assertEquals(2, tree.getPathFromRoot(g.getVerticles().get(9)).getLength());
+		assertEquals(3, tree.getPathFromRoot(g.getVerticles().get(10)).getLength());
+	}
+	
+	public void testIsValid() {
+		DirectedGraph g = GraphFactory.graph1();
+		Dijkstra dijkstra = new Dijkstra(g);
+		ShortestPathTree tree = dijkstra.createShortestPathTree();
+		//tree.createMinblocks(tree.getPathFromRoot(g.getTarget()));
+		
+		for (int i = 0; i < g.getEdges().size(); i++)
+			assertTrue(tree.isValid(g.getEdges().get(i), i));
+		
+	}
 }

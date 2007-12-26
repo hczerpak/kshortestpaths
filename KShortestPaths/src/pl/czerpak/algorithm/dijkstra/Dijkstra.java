@@ -22,7 +22,7 @@ import pl.czerpak.model.graph.Vertex;
  */
 public class Dijkstra {
 
-	// TODO: wywaliæ dist??
+	// TODO: wywaliï¿½ dist??
 	private Map<String, Double> distances = new HashMap<String, Double>();
 
 	private Map<String, Vertex> previous = new HashMap<String, Vertex>();
@@ -54,7 +54,7 @@ public class Dijkstra {
 		Edge edge;
 		Double alt;
 		List<Vertex> s = new ArrayList<Vertex>();
-		// g³ówna pêtla tworz¹ca mapê poprzedników wêz³ów
+		// gï¿½ï¿½wna pï¿½tla tworzï¿½ca mapï¿½ poprzednikï¿½w wï¿½zï¿½ï¿½w
 		while (!q.isEmpty()) {
 			u = q.extractMinimumEntry();
 
@@ -76,12 +76,14 @@ public class Dijkstra {
 
 	public List<Edge> getEdgesSequenceFromRootToVertex(Vertex target) {
 		Vertex parent = previous.get(target.getName());
+		
+		if (parent == null) return new ArrayList<Edge>();
 
 		Edge fromPreviousToTarget = null;
 		List<Edge> outgoingEdges = parent.getOutgoingEdges();
 
-		// przeszukiwanie zbioru krawêdzi w parencie w poszukiwaniu krawêdzi
-		// ³¹cz¹cej parenta z targetem
+		// przeszukiwanie zbioru krawÄ™dzi w parencie w poszukiwaniu krawÄ™dzi
+		// Å‚Ä…czÄ…cej parenta z targetem
 		for (int i = 0; i < outgoingEdges.size(); i++) {
 			if (outgoingEdges.get(i).getTarget() == target) {
 				fromPreviousToTarget = outgoingEdges.get(i);
@@ -91,17 +93,12 @@ public class Dijkstra {
 
 		List<Edge> edgesSequence;
 
-		// jeœli dotarliœmy do celu
-		if (graph.getSource() == parent)
-			edgesSequence = new ArrayList<Edge>();
-		else
-			// jeœli nie to pod¹¿ajmy za tropem
-			edgesSequence = getEdgesSequenceFromRootToVertex(parent);
+		edgesSequence = getEdgesSequenceFromRootToVertex(parent);
 
 		if (fromPreviousToTarget == null)
-			throw new NullPointerException("There should be edge connecting " + graph.getSource().getName() + " and " + target.getName());
+			throw new NullPointerException("There should be an edge connecting " + graph.getSource().getName() + " and " + target.getName());
 
-		// dodaj znalezion¹ krawêdŸ do listy
+		// dodaj znalezionï¿½ krawï¿½dï¿½ do listy
 		edgesSequence.add(fromPreviousToTarget);
 
 		return edgesSequence;

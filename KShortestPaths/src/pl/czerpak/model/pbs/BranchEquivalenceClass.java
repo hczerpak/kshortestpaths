@@ -122,6 +122,7 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 
 	@Override
 	public Path getShortestPath() {
+		if (shortestPath != null) return shortestPath;
 		
 		/***********************************************************************
 		 * (...) subgraph H of G, defined by deleting from G all the vertices on

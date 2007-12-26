@@ -50,7 +50,7 @@ public class DirectedGraph {
 		this.source = source;
 	}
 
-	/** Ilo�� wierzcho�k�w w grafie * */
+	/** quantity of verticles in graph * */
 	public int n() {
 		return verticles.size();
 	}

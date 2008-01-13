@@ -16,6 +16,11 @@ public class DijkstraTestCase extends TestCase {
 
 	public void testShortestPath() {
 
+		graph = GraphFactory.graph2();
+		algorithm = new Dijkstra(graph);
+		
+		assertEquals(2, algorithm.getShortestPath().getLength());
+		
 		graph = GraphFactory.graph1();
 		algorithm = new Dijkstra(graph);
 		
@@ -30,7 +35,6 @@ public class DijkstraTestCase extends TestCase {
 		assertEquals(15., path.getEdgesSequence().get(2).getWeight());
 		
 		assertEquals(3, path.getEdgesSequence().size());
-		
 		
 	}
 	

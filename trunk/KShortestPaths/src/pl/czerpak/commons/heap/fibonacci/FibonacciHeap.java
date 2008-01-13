@@ -33,10 +33,10 @@ public class FibonacciHeap<T> implements Heap<T> {
 				if (array[current.getDegree()] == null)
 					array[current.getDegree()] = current;
 				else {
-					// jeœli istnieje drzewo o takim samym degree() to scal oba
+					// jeï¿½li istnieje drzewo o takim samym degree() to scal oba
 					boolean merged = false;
 					while (!merged) {
-						// conflicted to drzewo które ju¿ znajduje siê w
+						// conflicted to drzewo ktï¿½re juï¿½ znajduje siï¿½ w
 						// rejestrze i ma taki sam degree jak aktualne drzewo
 						FibonacciHeapElement<T> lesser, greather, conflicted = (FibonacciHeapElement<T>) array[current.getDegree()];
 
@@ -51,14 +51,14 @@ public class FibonacciHeap<T> implements Heap<T> {
 						// wykasowujemy wpis w rejestrze bo powstanie nowe
 						// drzewo
 						array[current.getDegree()] = null;
-						// z lasu znika drzewo które ma byæ do³¹czone jako
+						// z lasu znika drzewo ktï¿½re ma byï¿½ doï¿½ï¿½czone jako
 						// dziecko do drzewa 'lesser'
 						forest.remove(greather);
-						// do³¹cz drzewo
+						// doï¿½ï¿½cz drzewo
 						lesser.getChildren().add(greather);
 						greather.setParent(lesser);
 						if (array[lesser.getDegree()] != null) {
-							// kontynuuj scalanie jeœli w wyniku scalania mamy
+							// kontynuuj scalanie jeï¿½li w wyniku scalania mamy
 							// drzewo jest w konflikcie z innym
 							merged = false;
 							current = lesser;
@@ -67,10 +67,10 @@ public class FibonacciHeap<T> implements Heap<T> {
 							array[lesser.getDegree()] = lesser;
 						}
 					}
-					// ³¹czenie drzew bêdzie kontynuowane
+					// ï¿½ï¿½czenie drzew bï¿½dzie kontynuowane
 					allDifferent = false;
 
-					// przerwanie pêtli for poniewa¿ rozmiar lasu siê zmieni³
+					// przerwanie pï¿½tli for poniewaï¿½ rozmiar lasu siï¿½ zmieniï¿½
 					break;
 				}
 			}
@@ -125,16 +125,15 @@ public class FibonacciHeap<T> implements Heap<T> {
 
 	/***************************************************************************
 	 * Uaktualnia priorytet obiektu w stercie przez wyekstraktowanie elementu
-	 * transportowego ze sterty (usuniêcie) i dodanie z nowym priorytetem
+	 * transportowego ze sterty (usuniÄ™cie) i dodanie z nowym priorytetem
 	 **************************************************************************/
 	public FibonacciHeapElement<T> update(T entry, Double priority) {
 		T element = extractEntry(entry);
-		size--;
 		return put(element, priority);
 	}
 
 	/**
-	 * Funkcja ekstraktuj¹ca element ze sterty
+	 * Funkcja ekstraktujï¿½ca element ze sterty
 	 */
 	protected T extractEntry(T entry) {
 		return extractEntryFromForest(forest, entry);
@@ -145,6 +144,7 @@ public class FibonacciHeap<T> implements Heap<T> {
 			FibonacciHeapElement<T> element = list.get(i);
 			if (element.getValue() == entry) {
 				list.remove(element);
+				size--;
 				return element.getValue();
 			}
 			T elementInChildren = extractEntryFromForest(element.getChildren(), entry);

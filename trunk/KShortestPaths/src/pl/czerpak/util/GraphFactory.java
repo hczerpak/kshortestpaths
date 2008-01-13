@@ -56,13 +56,13 @@ public class GraphFactory {
 		vs.get(0).getOutgoingEdges().add(new Edge(vs.get(0), vs.get(1), 1.));
 		vs.get(0).getOutgoingEdges().add(new Edge(vs.get(0), vs.get(2), 1.));
 		vs.get(0).getOutgoingEdges().add(new Edge(vs.get(0), vs.get(3), 1.));
-		vs.get(0).getOutgoingEdges().add(new Edge(vs.get(1), vs.get(4), 2.));
-		vs.get(0).getOutgoingEdges().add(new Edge(vs.get(1), vs.get(5), 2.));
-		vs.get(0).getOutgoingEdges().add(new Edge(vs.get(4), vs.get(6), 3.));
-		vs.get(0).getOutgoingEdges().add(new Edge(vs.get(5), vs.get(6), 3.));
-		vs.get(0).getOutgoingEdges().add(new Edge(vs.get(2), vs.get(7), 2.));
-		vs.get(0).getOutgoingEdges().add(new Edge(vs.get(3), vs.get(7), 3.));
-		vs.get(0).getOutgoingEdges().add(new Edge(vs.get(6), vs.get(7), 4.));
+		vs.get(1).getOutgoingEdges().add(new Edge(vs.get(1), vs.get(4), 2.));
+		vs.get(1).getOutgoingEdges().add(new Edge(vs.get(1), vs.get(5), 2.));
+		vs.get(4).getOutgoingEdges().add(new Edge(vs.get(4), vs.get(6), 3.));
+		vs.get(5).getOutgoingEdges().add(new Edge(vs.get(5), vs.get(6), 3.));
+		vs.get(2).getOutgoingEdges().add(new Edge(vs.get(2), vs.get(7), 2.));
+		vs.get(3).getOutgoingEdges().add(new Edge(vs.get(3), vs.get(7), 3.));
+		vs.get(6).getOutgoingEdges().add(new Edge(vs.get(6), vs.get(7), 4.));
 		
 
 		g.setTarget(vs.get(7));
@@ -72,12 +72,10 @@ public class GraphFactory {
 	}
 
 	public static void create(DirectedGraph g, Vertex v) {
-		for (int i = 0; i < v.getOutgoingEdges().size(); i++) {
-			Edge edge = v.getOutgoingEdges().get(i);
+		for (Edge edge : v.getOutgoingEdges())
 			if (!g.getEdges().contains(edge)) {
 				g.getEdges().add(edge);
 				create(g, edge.getTarget());
 			}
-		}
 	}
 }

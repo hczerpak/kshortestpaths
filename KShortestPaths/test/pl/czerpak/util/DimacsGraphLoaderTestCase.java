@@ -23,7 +23,9 @@ public class DimacsGraphLoaderTestCase extends TestCase {
 
 	@Test
 	public void testLoadGraph() {
+		assertNotNull(graphLoader);
 		try {
+			
 			graphLoader.loadGraph();
 		} catch (EOFException e) {
 			e.printStackTrace();

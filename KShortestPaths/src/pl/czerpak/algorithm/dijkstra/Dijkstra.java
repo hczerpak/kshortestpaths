@@ -54,7 +54,7 @@ public class Dijkstra {
 		Edge edge;
 		Double alt;
 		List<Vertex> s = new ArrayList<Vertex>();
-		// g��wna p�tla tworz�ca map� poprzednik�w w�z��w
+		// główna pętla tworząca mapę poprzedników węzłów
 		while (!q.isEmpty()) {
 			u = q.extractMinimumEntry();
 
@@ -98,7 +98,7 @@ public class Dijkstra {
 		if (fromPreviousToTarget == null)
 			throw new NullPointerException("There should be an edge connecting " + graph.getSource().getName() + " and " + target.getName());
 
-		// dodaj znalezion� kraw�d� do listy
+		// dodaj znalezioną krawędź do listy
 		edgesSequence.add(fromPreviousToTarget);
 
 		return edgesSequence;

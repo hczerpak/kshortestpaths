@@ -3,8 +3,8 @@ package pl.czerpak.util;
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,12 +60,7 @@ public class DimacsGraphLoader {
 	 * @param filename
 	 */
 	public DimacsGraphLoader(String filename) {
-		try {
-			reader = new BufferedReader(new FileReader(filename));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return;
-		}
+		reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(filename)));
 	}
 
 	public DirectedGraph loadGraph() throws MultipleProblemLinesException, IllegalLineFormatException, EOFException {
@@ -108,7 +103,7 @@ public class DimacsGraphLoader {
 
 		dg.setVerticles(verticlesList);
 
-		//System.out.println(dg.toString());
+		// System.out.println(dg.toString());
 
 		return dg;
 	}
@@ -213,7 +208,7 @@ public class DimacsGraphLoader {
 
 		verticles = new HashMap<String, Vertex>(n);
 
-		// TODO: sprawdziæ szybkoœæ przy implementacji LinkedList
+		// TODO: sprawdziï¿½ szybkoï¿½ï¿½ przy implementacji LinkedList
 		edges = new ArrayList<Edge>(m);
 
 		problemLineLoaded = true;

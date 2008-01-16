@@ -25,11 +25,7 @@ public class Path {
 		this.source = source;
 		this.target = target;
 		this.edgesSequence = edgesSequence;
-		if (edgesSequence != null) {
-			weight = 0.;
-			for (Edge e : edgesSequence)
-				weight += e.getWeight();
-		}
+		recalculateWeight();
 	}
 
 	public Vertex getSource() {
@@ -109,12 +105,12 @@ public class Path {
 	// UTIL BLOCK
 
 	/**
-	 * Zwraca pod�cie�k� o podanym pocz�tkowej i ko�cowej kraw�dzi w��czaj�c
-	 * obydwie kraw�dzie do wynikowej �cie�ki < ., .>
+	 * Zwraca podścieżkę o podanym początkowej i końcowej krawędzi włączając
+	 * obydwie krawędzie do wynikowej ścieżki < ., .>
 	 * 
 	 * @param startEdge
 	 * @param endEdge
-	 * @return pod�cie�ka
+	 * @return podścieżka
 	 * 
 	 */
 	public Path subPath(Edge startEdge, Edge endEdge) {
@@ -183,11 +179,22 @@ public class Path {
 			subp.source = subp.edgesSequence.get(0).getSource();
 			subp.target = subp.edgesSequence.get(subp.edgesSequence.size() - 1).getTarget();
 		}
+		
+		subp.recalculateWeight();
+		
 		return subp;
 	}
 
 	public Path subPath(int startIndex) {
 		return subPath(startIndex, -1);
+	}
+	
+	public void recalculateWeight() {
+		if (edgesSequence != null) {
+			weight = 0.;
+			for (Edge e : edgesSequence)
+				weight += e.getWeight();
+		}
 	}
 
 	/**

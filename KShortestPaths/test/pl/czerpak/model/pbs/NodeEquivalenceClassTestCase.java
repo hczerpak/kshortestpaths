@@ -53,8 +53,12 @@ public class NodeEquivalenceClassTestCase extends TestCase {
 		assertEquals(1, ti.getBranches().size());
 		assertEquals(2, ti.getNodes().size());
 		assertEquals(s.getName(), ti.getBranches().iterator().next().getSource().getName());
-		assertEquals(g.getTarget().getName(), ti.getBranches().iterator().next().getTarget().getName());
-		assertEquals(19, ti.getBranches().iterator().next().getBranchPath().getWeight());
+		assertEquals(g.getTarget().getName(), ti.getBranches().iterator().next().getTarget().getVertex().getName());
+		
+		Path branchPath = ti.getBranches().iterator().next().getBranchPath();
+
+		assertEquals(2, branchPath.getLength());
+		assertEquals(3., branchPath.getWeight());
 	}
 
 	public void testNodeEquivalenceClass() {

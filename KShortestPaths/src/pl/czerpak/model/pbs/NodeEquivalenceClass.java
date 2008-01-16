@@ -36,6 +36,7 @@ public class NodeEquivalenceClass extends EquivalenceClass {
 		newBranch.setTarget(tpNode);
 		// represents the suffix of P after u
 		newBranch.setBranchPath(shortestPath.subPath(parentNode.getVertex()));
+		
 
 		// Add a new branch (u, tp) to T
 		parentNode.getOutgoingBranches().add(newBranch);

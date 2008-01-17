@@ -34,12 +34,12 @@ public class BranchEquivalenceClassTestCase extends TestCase {
 		List<Edge> edges = shortestPath.getEdgesSequence();
 		
 		assertEquals(g.getVerticles().get(0).getName(), edges.get(0).getSource().getName());
-		assertEquals(g.getVerticles().get(2).getName(), edges.get(0).getTarget().getName());
-		assertEquals(5, edges.size());
-		assertEquals(1., edges.get(0).getWeight());
-		assertEquals(4., edges.get(1).getWeight());
+		assertEquals(g.getVerticles().get(2).getName(), edges.get(1).getTarget().getName());
+		assertEquals(4, edges.size());
+		assertEquals(4., edges.get(0).getWeight());
+		assertEquals(11., edges.get(1).getWeight());
 		
-		assertEquals(30., shortestPath.getWeight());
+		assertEquals(40., shortestPath.getWeight());
 	}
 
 	public void testModifyPathBranchingStructure() {

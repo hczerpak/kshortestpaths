@@ -61,7 +61,14 @@ public class BranchEquivalenceClassTestCase extends TestCase {
 		
 		eq2.modifyPathBranchingStructure(ti);
 		
-		fail("Not yet implemented");
+		assertEquals(1, ti.getRoot().getOutgoingBranches().size());
+		Node wNode = ti.getRoot().getOutgoingBranches().get(0).getTarget();
+		assertEquals(2, wNode.getOutgoingBranches().size());
+		assertEquals(4, wNode.getOutgoingBranches().get(0).getBranchPath().getLength());
+		
+		
+		
+		//todo
 		
 	}
 

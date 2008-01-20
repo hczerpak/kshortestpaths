@@ -136,7 +136,7 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 			graph.getVerticles().remove(edge.getSource());
 		}
 		/** ...including a * */
-		graph.getVerticles().remove(parentBranch.getBranchPath().getLeadEdge().getSource());
+		graph.getVerticles().remove(parentBranch.getSource().getVertex());
 		graph.setSource(parentBranch.getBranchPath().getLeadEdge().getTarget());
 		replacementBasePath = replacementBasePath.subPath(graph.getSource());
 		

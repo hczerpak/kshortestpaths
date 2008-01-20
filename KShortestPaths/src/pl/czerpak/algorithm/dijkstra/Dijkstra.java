@@ -34,10 +34,6 @@ public class Dijkstra {
 	public Dijkstra(DirectedGraph graph) {
 		this.graph = graph;
 		
-		execute();
-	}
-
-	private void execute() {
 		Heap<Vertex> q = new FastUpdateHeap<Vertex>();
 		Vertex v;
 		for (int i = 0; i < graph.getVerticles().size(); i++) {

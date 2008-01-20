@@ -55,7 +55,7 @@ public class DirectedGraph {
 		return verticles.size();
 	}
 
-	/** Ilo�� kraw�dzi w grafie * */
+	/** edges quantity * */
 	public int m() {
 		return edges.size();
 	}
@@ -73,16 +73,22 @@ public class DirectedGraph {
 
 	public void reverseEdges() {
 		Edge edge;
-		Vertex temp;
+		Vertex temp, source, target;
 		for (int i = 0; i < edges.size(); i++) {
 			edge = edges.get(i);
+			source = edge.getSource();
+			target = edge.getTarget();
+			
 			temp = edge.getSource();
-			edge.setSource(edge.getTarget());
-			edge.setTarget(temp);
+			edge.setSource(target);
+			edge.setTarget(source);
+			
+			source.getOutgoingEdges().remove(edge);
+			target.getOutgoingEdges().add(edge);
 		}
-		temp = source;
-		source = target;
-		target = temp;
+		temp = this.source;
+		this.source = this.target;
+		this.target = temp;
 	}
 
 	public String toString() {

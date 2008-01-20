@@ -15,10 +15,7 @@ public class ShortestPathTree {
 
 	public ShortestPathTree(Dijkstra dijkstra) {
 		this.dijkstra = dijkstra;
-		createTree();
-	}
 
-	private void createTree() {
 		Vertex v, u;
 		DijkstraTreeElement element, previousElement;
 		Map<String, DijkstraTreeElement> elements = new HashMap<String, DijkstraTreeElement>();

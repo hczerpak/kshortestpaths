@@ -34,9 +34,9 @@ public class Replacement {
 		 **********************************************************************/
 		ShortestPathTree spiderX = new Dijkstra(graph).createShortestPathTree();
 
+		Dijkstra d = new Dijkstra(graph);
 		graph.reverseEdges();
-
-		ShortestPathTree spiderY = new Dijkstra(graph).createShortestPathTree();
+		ShortestPathTree spiderY = d.createShortestPathTree();
 
 		graph.reverseEdges();
 

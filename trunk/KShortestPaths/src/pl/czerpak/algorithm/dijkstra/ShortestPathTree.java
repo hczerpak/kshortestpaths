@@ -13,12 +13,8 @@ public class ShortestPathTree {
 	private DijkstraTreeElement root;
 	private Dijkstra dijkstra;
 
-	// private Map<Vertex, Integer> low;
-
 	public ShortestPathTree(Dijkstra dijkstra) {
 		this.dijkstra = dijkstra;
-		// low = new HashMap<Vertex, Integer>();
-
 		createTree();
 	}
 
@@ -71,66 +67,7 @@ public class ShortestPathTree {
 	public Double getDistance(Vertex vertex) {
 		return dijkstra.getDistances().get(vertex.getName());
 	}
-
-	/**
-	 * Mój sposób na implementację preorder.
-	 * 
-	 * Zaczynając od korzenia oznaczamy wszystkie elementy na drzewie. Obok jest
-	 * przygotowany stos wierzchołków grafu. Przy każdym przejściu niżej wzdłuż
-	 * najkrótszej ścieżki path(x, y) zdejmowany jest ze stosu jeden wierzchołek
-	 * by wiedzieć, gdzie spośród potomków węzła mamy zejść aby podążać właściwą
-	 * drogą. Kiedy schodzimy ścieżką za każdym razem zmniejszamy wartość low i
-	 * ustawiamy ją dla wszystkich potomków (z wyjątkiem tego, do którego
-	 * podążymy w dół). w ten sposób nie trzeba sprawdzać warunku minblock(u) =
-	 * min(block(u), minblock(v))
-	 * 
-	 * @param shortestPath
-	 */
-	// public void createMinblocks(Path shortestPath) {
-	// //punkt kontrolny, ostatni vertex w sciezce powinien byc takze w roocie
-	// drzewa
-	// if (shortestPath.getTarget() != root.getVertex())
-	// throw new DijkstraException("Shortest path target <" +
-	// shortestPath.getTarget().getName() + "> and shortest path tree root <" +
-	// root.getVertex().getName() + "> differes.");
-	//
-	// //przygotowanie stosu bez ostatniego elementu (root.getVertex)
-	// int pathSize = shortestPath.getEdgesSequence().size();
-	// Stack<Vertex> vstack = new Stack<Vertex>();
-	// vstack.add(shortestPath.getSource());
-	// for (int i = 0; i < pathSize; i++)
-	// vstack.add(shortestPath.getEdgesSequence().get(i).getSource());
-	//		
-	// low.put(root.getVertex(), vstack.size() + 1);// + 1 bo ostatniego nie
-	// wrzucono na stos
-	// preorder(vstack, root, vstack.size() + 1);
-	//		
-	// }
-	//	
-	//
-	// private void preorder(Stack<Vertex> vstack, DijkstraTreeElement r, int
-	// lowValue) {
-	// DijkstraTreeElement next = null;
-	// Vertex vertex = vstack.pop();
-	// for (DijkstraTreeElement child : r.getChildren()) {
-	// //if child represents previous vertex in path
-	// if (child.getVertex() == vertex) {
-	// next = child;
-	// continue;
-	// }
-	//			
-	// //if map contains certain key, update its lowValue
-	// if (low.containsKey(child.getVertex()))
-	// low.remove(child.getVertex());
-	// low.put(child.getVertex(), lowValue);
-	//			
-	// preorder(vstack, child, lowValue);
-	// }
-	//		
-	// //process next item with lower value
-	// if (next != null)
-	// preorder(vstack, next, lowValue - 1);
-	// }
+	
 	private int temp, min;
 
 	public int low(Vertex b) {

@@ -50,6 +50,23 @@ public class DirectedGraph {
 		this.source = source;
 	}
 
+	public void remove(Vertex vertex) {
+		verticles.remove(vertex);
+		
+		for (Edge e : vertex.getOutgoingEdges())
+			remove(e);
+
+		vertex.getOutgoingEdges().clear();
+		
+		for (Edge e : edges)
+			if (e.getTarget().getId() == vertex.getId())
+				remove(e);
+	}
+	
+	public void remove(Edge edge) {
+		edges.remove(edge);
+	}
+	
 	/** quantity of verticles in graph * */
 	public int n() {
 		return verticles.size();

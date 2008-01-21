@@ -68,15 +68,15 @@ public class NodeEquivalenceClass extends EquivalenceClass {
 		Path prefixW = parentNode.prefixPath();
 		for (int i = 0; i < prefixW.getEdgesSequence().size(); i++) {
 			edge = prefixW.getEdgesSequence().get(i);
-			graph.getEdges().remove(edge);
-			graph.getVerticles().remove(edge.getSource());
+			graph.remove(edge);
+			graph.remove(edge.getSource());
 		}
 		/** ..., plus all the lead edges that leave from w. * */
 		List<Edge> leadEdges = parentNode.leadEdges();
 		for (int i = 0; i < leadEdges.size(); i++) {
 			edge = leadEdges.get(i);
-			graph.getEdges().remove(edge);
-			edge.getSource().getOutgoingEdges().remove(edge);
+			graph.remove(edge);
+			edge.getSource().remove(edge);
 		}
 		graph.setSource(parentNode.getVertex());
 		/***********************************************************************

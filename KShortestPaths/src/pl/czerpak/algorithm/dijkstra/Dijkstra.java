@@ -40,7 +40,7 @@ public class Dijkstra {
 			v = graph.getVerticles().get(i);
 			q.put(v, Double.POSITIVE_INFINITY);
 			distances.put(v.getName(), Double.POSITIVE_INFINITY);
-			previous.remove(v.getName());
+			//previous.remove(v.getName());
 		}
 
 		distances.put(graph.getSource().getName(), 0.0);

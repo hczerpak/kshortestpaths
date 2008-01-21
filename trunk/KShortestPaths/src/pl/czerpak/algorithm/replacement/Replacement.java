@@ -15,13 +15,13 @@ public class Replacement {
 
 	private DirectedGraph graph;
 
-	private Path xShortestPath = null;
+	private Path basePath = null;
 
 	private Path bestReplacement = null;
 
-	public Replacement(DirectedGraph graph, Path xShortestPath) {
+	public Replacement(DirectedGraph graph, Path basePath) {
 		this.graph = graph;
-		this.xShortestPath = xShortestPath;
+		this.basePath = basePath;
 
 		execute();
 	}
@@ -40,8 +40,6 @@ public class Replacement {
 
 		graph.reverseEdges();
 
-		//spiderY.createMinblocks(xShortestPath);
-		
 		Heap<Path> heap = new FibonacciHeap<Path>();
 
 		/**
@@ -49,8 +47,8 @@ public class Replacement {
 		 */
 		Set<Edge> setEi = new HashSet<Edge>();
 
-		for (int i = 0; i < xShortestPath.getEdgesSequence().size(); i++) {
-			Edge cutEdge = xShortestPath.getEdgesSequence().get(i);
+		for (int i = 0; i < basePath.getEdgesSequence().size(); i++) {
+			Edge cutEdge = basePath.getEdgesSequence().get(i);
 			/**
 			 * (a) Let Xi = X \ ei. Let Ei be the set of all edges (a, b) in
 			 * E\ei such that a and b are in different components of Xi, with a
@@ -63,7 +61,7 @@ public class Replacement {
 			
 			// remove from Ei edges with target set to a
 			for (Edge edge : setEi) {
-				if (edge.getTarget() == cutEdge.getTarget())
+				if (edge.getTarget() == cutEdge.getSource())
 					setEi.remove(edge);
 			}
 
@@ -91,7 +89,8 @@ public class Replacement {
 					path.getEdgesSequence().addAll(spiderY.getPathToRoot(edge.getTarget()).getEdgesSequence());
 				} else {
 					DirectedGraph g = graph.clone();
-					g.getEdges().remove(edge);
+					g.remove(edge);
+					edge.disjoin();
 					path = new Dijkstra(g).getShortestPath();
 					pathWeight = path.getWeight();
 				}

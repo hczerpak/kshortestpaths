@@ -16,11 +16,15 @@ public class Vertex {
 		outgoingEdges = new ArrayList<Edge>();
 		id = counter++;
 	}
-
+	
 	public Vertex(String name) {
 		this.outgoingEdges = new ArrayList<Edge>();
 	}
 
+	public void remove(Edge edge) {
+		outgoingEdges.remove(edge);
+	}
+	
 	public List<Edge> getOutgoingEdges() {
 		return outgoingEdges;
 	}

@@ -16,6 +16,10 @@ public class Edge {
 		this.target = target;
 		this.weight = weight;
 	}
+	
+	public void disjoin() {
+		source.remove(this);
+	}
 
 	public Vertex getSource() {
 		return source;

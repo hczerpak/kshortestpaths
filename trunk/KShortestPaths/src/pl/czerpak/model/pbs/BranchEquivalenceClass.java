@@ -39,9 +39,9 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 		// kiedy P p�jdzie
 		// w inn� stron�, od razu tworz�c �cie�ki potrzebne w nast�pnym
 		// kroku
-		for (int j = 0; j < branchPath.getEdgesSequence().size(); j++) {
+		for (int j = 0; j < branchPath.getEdgesSequence().size() - 1; j++) {
 			Edge edgeFromP = shortestPath.getEdgesSequence().get(j);
-			Edge edgeFromBranchPath = branchPath.getEdgesSequence().get(j);
+			Edge edgeFromBranchPath = branchPath.getEdgesSequence().get(j + 1);
 
 			if (edgeFromP != edgeFromBranchPath)
 				w = edgeFromP.getSource();
@@ -95,8 +95,8 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 		 * equivalence classes C(u, w), C(w, v), C(w, tp), and C(w), depending
 		 * on where they branch from branchPath(u, v) and/or P.
 		 **********************************************************************/
-		// i znowu redystrybucja jest umowna (nie ma) poniewa� nie mamy
-		// �cie�ek jawnie okre�lonych
+		// i znowu redystrybucja jest umowna (nie ma) ponieważ nie mamy
+		// ścieżek jawnie określonych
 		BranchEquivalenceClass equivalenceClassUW = new BranchEquivalenceClass(
 				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph.clone(), pathUW, branchUW);
 		branchUW.setEquivalenceClass(equivalenceClassUW);
@@ -133,10 +133,10 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 		for (int i = 0; i < prefixA.getEdgesSequence().size(); i++) {
 			edge = prefixA.getEdgesSequence().get(i);
 			//graph.getEdges().remove(edge);
-			graph.getVerticles().remove(edge.getSource());
+			graph.remove(edge.getSource());
 		}
 		/** ...including a * */
-		graph.getVerticles().remove(parentBranch.getSource().getVertex());
+		graph.remove(parentBranch.getSource().getVertex());
 		graph.setSource(parentBranch.getBranchPath().getLeadEdge().getTarget());
 		replacementBasePath = replacementBasePath.subPath(graph.getSource());
 		

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" xmlns:ns1="com.flexibleexperiments.primitiveIcons.*">
+    <mx:Accordion x="24" y="22" width="200" height="200">
+        <mx:Canvas label="Accordion Pane 1" width="100%" height="100%">
+        </mx:Canvas>
+    </mx:Accordion>
+    
+</mx:Canvas>

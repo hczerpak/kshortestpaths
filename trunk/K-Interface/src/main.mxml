@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
+    xmlns:fc="http://www.adobe.com/2006/fc"
+    layout="vertical" 
+    title="K-Interface"
+    verticalAlign="top"
+    horizontalAlign="left"
+    backgroundGradientColors="[#888888,#333333]"
+     height="600" width="800">
+    <mx:ApplicationControlBar dock="true" paddingTop="0" paddingBottom="0">
+
+        <mx:MenuBar id="menuBar" labelField="@label" width="100%">
+            <mx:XMLList>
+                <menuitem label="File">
+                    <menuitem label="New graph"/>
+                    <menuitem label="Open graph (*.gr) ..."/>
+                    <menuitem label="Save graph ..."/>
+                    <menuitem label="Exit"/>
+                </menuitem>
+                <menuitem label="Information" >
+                    <menuitem label="About author"/>
+                    <menuitem label="About this application"/>
+                    <menuitem label="About authors diplom"/>
+                </menuitem>
+            </mx:XMLList>
+        </mx:MenuBar>
+    </mx:ApplicationControlBar>
+    
+    <mx:Panel layout="absolute" minHeight="200" minWidth="250" height="100%" width="100%">
+        <fc:Roamer id="roamer" bottom="0" 
+            itemRenderer="pl.hczerpak.kinterface.XMLItemView"
+            repulsionFactor="{repulsion.value}" 
+            maxDistanceFromCurrent="{maxDistanceFromCurrent.value}" 
+            itemLimit="{maxVisible.value}"
+            autoFit="{autoFit.selected}"
+            motionThreshold="{motionThreshold.value}"
+            change="if(infoText != null) infoText.text = roamer.fullNodeCount + ' items, ' + roamer.visibleNodeCount + ' visible.';" right="0" left="0" top="0">
+    
+            <fc:removeItemEffect>
+                <mx:Fade alphaFrom="1" alphaTo="0" duration="1000"/>                
+            </fc:removeItemEffect>
+            
+            <fc:addItemEffect>
+                <mx:Fade alphaFrom="0" alphaTo="1" duration="1000"/>
+            </fc:addItemEffect>
+        </fc:Roamer>
+        <mx:Button x="27" y="442" label="Hide current item" click="roamer.hideItem(roamer.currentItem)" width="103" fontSize="9"/>
+        <mx:Text fontSize="9" fontWeight="bold" textAlign="left" width="114" htmlText="&lt;a href=&quot;http://code.google.com/p/kshortestpaths/&quot;&gt; project google source address &lt;/a&gt;" x="10" y="29"/>
+        <mx:Label x="10" y="290" text="max number visible" fontSize="9" width="133" textAlign="center" />
+        <mx:HSlider x="10" y="273" width="133" id="maxVisible" snapInterval="1" value="50" minimum="20" maximum="150" liveDragging="true"/>
+        <mx:CheckBox selected="true" id="autoFit" x="11" y="365" label="Auto-fit items to window"/>
+        <mx:Label x="11" y="407" text="item spacing" fontSize="9" width="133" textAlign="center"/>
+        <mx:HSlider x="11" y="393" width="133" id="repulsion" value="{roamer.repulsionFactor}" minimum="0.01" maximum="1.5" liveDragging="true"/>
+        <mx:CheckBox x="11" y="323" label="Show history" selected="true" change="roamer.showHistory = event.currentTarget.selected"/>
+        <mx:Label x="10" y="243" text="max degrees of separation" fontSize="9" textAlign="left"/>
+        <mx:HSlider x="10" y="224" width="133" id="maxDistanceFromCurrent" value="3" minimum="1" maximum="5" liveDragging="true" snapInterval="1" height="25"/>
+        <mx:Text x="10" y="10" text="Roamer Component Demo" fontSize="12" fontWeight="bold"/>
+        <mx:Text x="10" y="68" text="no data loaded" id="infoText" fontSize="9"/>
+        <mx:Text x="10" y="92" id="help" fontSize="9" text="Double click an item to make it the current item, drag the background to scroll"/>
+        <mx:Label visible="false" x="9" y="443" text="motion stop threshold" fontSize="9" width="133" textAlign="center"/>
+        <mx:HSlider visible="false" x="9" y="429" width="133" id="motionThreshold" value="{roamer.motionThreshold}" minimum="0.01" maximum="2" liveDragging="true"/>
+        
+        
+        <mx:Button id="fromWideDataButton" x="10" y="146" label="~25 links/node (600 KB)" click="wideExternalData.send();" width="136" fontSize="9"/>
+        <mx:Button id="fromSmallDataButton" x="10" y="117" label="small sample (30 KB)" click="smallExternalData.send();" width="137" fontSize="9"/>
+        <mx:Button id="fromBigDataButton0" x="10" y="175" label="~7 links/node (1.4 MB)" click="bigExternalData.send();" width="136" fontSize="9"/>
+        <mx:Label x="150" y="121" text="*" id="currentDataIndicator"/>
+    </mx:Panel>
+    
+    
+    <mx:HTTPService id="bigExternalData" url="http://mark-shepherd.com/SpringGraph/RoamerDemo/bin/data7.7.7.7.7.xml" showBusyCursor="true" resultFormat="e4x"
+            result="gotData(['n','e','f','t'], event, fromBigDataButton0)"/>
+    <mx:HTTPService id="wideExternalData" url="http://mark-shepherd.com/SpringGraph/RoamerDemo/bin/data25.25.25.xml" showBusyCursor="true" resultFormat="e4x"
+            result="gotData(['n','e','f','t'], event, fromWideDataButton)"/>
+    <mx:HTTPService id="smallExternalData" url="http://mark-shepherd.com/SpringGraph/RoamerDemo/bin/dataSmall.xml" showBusyCursor="true" resultFormat="e4x"
+            result="gotData(['Node','Edge','fromID','toID'], event, fromSmallDataButton)"/>
+    
+    <mx:Script>
+        <![CDATA[
+            import com.adobe.flex.extras.controls.springgraph.SpringGraph;
+            import mx.rpc.events.ResultEvent;
+            import com.adobe.flex.extras.controls.springgraph.Item;
+            import com.adobe.flex.extras.controls.springgraph.Graph;
+            
+            private function setup(): void {
+                smallExternalData.send();
+                roamer.repulsionFactor = 0.4;
+                roamer.showHistory = true;
+            }
+            
+            private function gotData(xmlNames: Array, event: ResultEvent, button: Button): void {
+                maxDistanceFromCurrent.value = 2;
+                roamer.resetHistory();
+                roamer.resetShowHide();
+                roamer.xmlNames = xmlNames;
+                roamer.dataProvider = event.result as XML;
+                currentDataIndicator.y = button.y + 4;
+            }
+            
+            public function itemDoubleClick(event: Event): void {
+                roamer.currentItem = event.currentTarget.data;
+            }
+            
+            private function readGraphFile() : void {
+                var file : File = File.documentsDirectory.resolve( "K-/example.txt" );
+            }
+        ]]>
+    </mx:Script>
+</mx:WindowedApplication>

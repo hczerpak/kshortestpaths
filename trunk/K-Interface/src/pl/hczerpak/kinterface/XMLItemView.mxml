@@ -7,7 +7,7 @@
     >    
     
     <ns1:Circle x="0" y="0" width="100%" height="100%"/>            
-    <mx:Text fontSize="10" text="{data.data.@prop}" width="65" selectable="false" y="0" x="0"/>    
+    <mx:Text fontSize="10" text="{data.data.@prop}" selectable="false" y="0" x="0"/>    
     
     <mx:Script>
         <![CDATA[

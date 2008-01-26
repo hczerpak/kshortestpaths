@@ -4,10 +4,8 @@
     filters="{calcFilters(parentComponent.roamer.currentItem, data as Item)}" 
     xmlns:ns1="pl.hczerpak.kinterface.components.*"
     creationComplete="creationComplete()"
-    >    
-    
-    <ns1:Circle x="0" y="0" width="100%" height="100%"/>            
-    <mx:Text fontSize="10" text="{data.data.@prop}" selectable="false" y="0" x="0" color="#FFFFFF" fontWeight="bold" fontFamily="Verdana"/>    
+    >         
+    <mx:Text fontSize="8" text="{data.data.@prop}" selectable="false" y="0" x="0" color="#FFFFFF" fontWeight="bold" fontFamily="Verdana"/>    
     
     <mx:Script>
         <![CDATA[

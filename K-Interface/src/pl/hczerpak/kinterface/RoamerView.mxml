@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="640" height="480" xmlns:adobe="http://www.adobe.com/2006/fc" creationComplete="creationComplete()">
-    
-    <adobe:Roamer id="roamer" bottom="0" 
+    <adobe:Roamer id="roamer"
         itemRenderer="pl.hczerpak.kinterface.renderer.GraphCirlcleItemRenderer"
         repulsionFactor="{repulsion.value}" 
         maxDistanceFromCurrent="{maxDistanceFromCurrent.value}" 
@@ -9,10 +8,9 @@
         autoFit="{autoFit.selected}"
         motionThreshold="{motionThreshold.value}"
         change="if (infoText != null) infoText.text = roamer.fullNodeCount + ' items, ' + roamer.visibleNodeCount + ' visible.';" 
-        right="0" left="0" top="0"
-        dataProvider="{this._dataProvider}"
+        right="0" left="0" top="0" x="0" y="0" bottom="0"
+        dataProvider="{_dataProvider}"
         xmlNames="{['Node','Edge','fromID','toID']}"
-        x="0" y="0"
         >
         
         <adobe:removeItemEffect>
@@ -23,7 +21,6 @@
             <mx:Fade alphaFrom="0" alphaTo="1" duration="1000"/>
         </adobe:addItemEffect>
     </adobe:Roamer>
-    
     
     <mx:VBox x="10" y="10">
         <mx:Text text="Roamer View" fontSize="12" fontWeight="bold"/>
@@ -44,6 +41,7 @@
     
     <mx:Script>
         <![CDATA[
+            import pl.hczerpak.kinterface.renderer.DirectedEdgeRenderer;
             import mx.rpc.events.ResultEvent;
             
             [Bindable] private var _dataProvider : XML = null;
@@ -51,6 +49,7 @@
             private function creationComplete(): void {
                 roamer.repulsionFactor = 0.4;
                 roamer.showHistory = true;
+                //roamer.edgeRenderer= new DirectedEdgeRenderer();
             }
             
             [Bindable] public function get dataProvider() : XML {

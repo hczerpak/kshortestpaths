@@ -9,12 +9,18 @@
     height="600" width="800" xmlns:ns1="pl.hczerpak.kinterface.*">
    
     <mx:ViewStack id="mainVS" width="100%" height="100%" backgroundColor="#FFFFFF" backgroundAlpha="0.5">
-        <ns1:RoamerView height="100%" width="100%" label="Roamer"/>
-        <ns1:SpringGraphView height="100%" width="100%" label="SpringGraphView"/>
+        <ns1:RoamerView height="100%" width="100%" label="Roamer" dataProvider="{graphXMLData}" />
+        <ns1:SpringGraphView height="100%" width="100%" label="Spring View"/>
+        <mx:Canvas label="Branching structure" enabled="false"/>
+        <mx:Canvas label="Results" enabled="false"/>
     </mx:ViewStack>
     
-    <mx:ToggleButtonBar dataProvider="{mainVS}" />
-    
+    <mx:ApplicationControlBar dock="false" paddingTop="0" paddingBottom="0" width="100%"> 
+        <mx:ToggleButtonBar dataProvider="{mainVS}" />
+        <mx:Spacer width="100%"/>
+        <mx:Text fontSize="9" fontWeight="bold" textAlign="left" htmlText="&lt;a href=&quot;http://code.google.com/p/kshortestpaths/&quot;&gt;http://code.google.com/p/kshortestpaths/&lt;/a&gt;" textDecoration="underline" color="#FFFFFF"/>
+    </mx:ApplicationControlBar>
+   
     <mx:ApplicationControlBar dock="true" paddingTop="0" paddingBottom="0">
 
         <mx:MenuBar id="menuBar" labelField="@label" width="100%" itemClick="menuHandler(event)">
@@ -34,8 +40,12 @@
         </mx:MenuBar>
     </mx:ApplicationControlBar>
     
+    
     <mx:Script>
         <![CDATA[
+            import mx.automation.codec.ArrayPropertyCodec;
+            import mx.collections.ArrayCollection;
+            import pl.hczerpak.kinterface.util.GraphFilesParser;
             import mx.controls.Alert;
             import mx.events.MenuEvent;
             
@@ -44,8 +54,11 @@
             //file extension filter
             private var graphFilter : FileFilter = new FileFilter("Graph files (*.gr, *.gxml)", "*.gr;*.gxml");
             
+            //graph data
+            private var graphEdges : ArrayCollection = null;
+            private var graphVertexes : ArrayCollection = null;
             
-            
+            [Bindable] private var graphXMLData : XML = null;
             
             private function menuHandler(event : MenuEvent) : void  {
                 if (event.item.@data == "open") {
@@ -61,23 +74,28 @@
             
             private function fileSelected(event : Event) : void {
                 var stream : FileStream = new FileStream();
+                var xml : XML = null;
                 try 
                 {
                     fileToOpen = event.target as File;
                     stream.open(fileToOpen, FileMode.READ);
-                    var str = stream.readUTFBytes(stream.bytesAvailable);
+                    var str : String = stream.readUTFBytes(stream.bytesAvailable);
                     stream.close();
                     
+                    trace(str);
+                    
                     if (fileToOpen.name.lastIndexOf(".gr") == fileToOpen.name.length - 3 - 1)
-                        readGR(str);
+                        xml = GraphFilesParser.parseDimacs(str);
+                    else if (fileToOpen.name.lastIndexOf(".gxml") == fileToOpen.name.length - 4 - 1)
+                        xml = GraphFilesParser.parseGXML(str);
                 } catch (error : Error)  {
                     Alert.show("" + error.errorID + ": " + error.message, "File " + fileToOpen.nativePath + fileToOpen.name + " cannot be read");
                 }
-
+                
+                graphXMLData = xml;
             }
-            
-            private function 
             
         ]]>
     </mx:Script>
+    
 </mx:WindowedApplication>

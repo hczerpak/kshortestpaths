@@ -2,7 +2,7 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="640" height="480" xmlns:adobe="http://www.adobe.com/2006/fc" creationComplete="creationComplete()">
     
     <adobe:Roamer id="roamer" bottom="0" 
-        itemRenderer="pl.hczerpak.kinterface.XMLItemView"
+        itemRenderer="pl.hczerpak.kinterface.renderer.GraphCirlcleItemRenderer"
         repulsionFactor="{repulsion.value}" 
         maxDistanceFromCurrent="{maxDistanceFromCurrent.value}" 
         itemLimit="{maxVisible.value}"

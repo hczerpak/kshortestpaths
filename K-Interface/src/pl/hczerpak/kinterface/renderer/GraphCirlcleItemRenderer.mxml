@@ -11,6 +11,7 @@
     
     <mx:Script>
         <![CDATA[
+            import pl.hczerpak.kinterface.RoamerView;
             import com.adobe.flex.extras.controls.springgraph.Roamer;
             import mx.effects.Glow;
             import com.adobe.flex.extras.controls.springgraph.Graph;
@@ -20,7 +21,7 @@
             [Bindable] private var parentComponent : RoamerView = null;
             
             private function creationComplete() : void {
-                parentComponent = parent as RoamerView;
+                parentComponent = parent.parent as RoamerView;
             }
             
             public function doubleClick(event: Event): void {

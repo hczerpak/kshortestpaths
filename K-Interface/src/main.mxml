@@ -6,11 +6,11 @@
     verticalAlign="top"
     horizontalAlign="left"
     backgroundGradientColors="[#888888,#333333]"
-    height="600" width="800" xmlns:ns1="pl.hczerpak.kinterface.*">
+    height="600" width="800" xmlns:ns1="pl.hczerpak.kinterface.*" creationComplete="creationComplete()">
    
     <mx:ViewStack id="mainVS" width="100%" height="100%" backgroundColor="#FFFFFF" backgroundAlpha="0.5">
-        <ns1:RoamerView height="100%" width="100%" label="Roamer" dataProvider="{graphXMLData}" />
-        <ns1:SpringGraphView height="100%" width="100%" label="Spring View" dataProvider="{graphXMLData}"/>
+        <ns1:RoamerView id="roamerView" height="100%" width="100%" label="Roamer" dataProvider="{ModelLocator.instance.graphXMLData}" />
+        <ns1:SpringGraphView id="springView" height="100%" width="100%" label="Spring View" dataProvider="{ModelLocator.instance.graphXMLData}"/>
         <mx:Canvas label="Branching structure" enabled="false"/>
         <mx:Canvas label="Results" enabled="false"/>
     </mx:ViewStack>
@@ -31,6 +31,10 @@
                     <menuitem label="Save graph ..." data="save"/>
                     <menuitem label="Exit" data="exit"/>
                 </menuitem>
+                <menuitem label="Edit" data="">
+                    <menuitem label="New vertex" data="new_vertex"/>
+                    <menuitem label="New edge" data="new_edge"/>
+                </menuitem>
                 <menuitem label="Information" data="">
                     <menuitem label="About author" data="about_author"/>
                     <menuitem label="About this application" data="about_application"/>
@@ -42,6 +46,13 @@
     
     <mx:Script>
         <![CDATA[
+            import pl.hczerpak.kinterface.dispatcher.GraphChangeEvent;
+            import pl.hczerpak.kinterface.model.ModelController;
+            import mx.events.IndexChangedEvent;
+            import mx.core.IFlexDisplayObject;
+            import pl.hczerpak.kinterface.NewNodePanel;
+            import mx.managers.PopUpManager;
+            import pl.hczerpak.kinterface.model.ModelLocator;
             import mx.automation.codec.ArrayPropertyCodec;
             import mx.collections.ArrayCollection;
             import pl.hczerpak.kinterface.util.GraphFilesParser;
@@ -53,12 +64,6 @@
             //file extension filter
             private var graphFilter : FileFilter = new FileFilter("Graph files (*.gr, *.gxml)", "*.gr;*.gxml");
             
-            //graph data
-            private var graphEdges : ArrayCollection = null;
-            private var graphVertexes : ArrayCollection = null;
-            
-            [Bindable] private var graphXMLData : XML = null;
-            
             private function menuHandler(event : MenuEvent) : void  {
                 if (event.item.@data == "open") {
                     fileToOpen = new File();
@@ -68,7 +73,11 @@
                     } catch (error:Error) {
                         trace("Failed:", error.message)
                     }
-                }        
+                } else
+                
+                if (event.item.@data == "new_vertex") 
+                    PopUpManager.createPopUp(this, NewNodePanel, true);
+                
             }
             
             private function fileSelected(event : Event) : void {
@@ -81,8 +90,6 @@
                     var str : String = stream.readUTFBytes(stream.bytesAvailable);
                     stream.close();
                     
-                    trace(str);
-                    
                     if (fileToOpen.name.lastIndexOf(".gr") == fileToOpen.name.length - 3 - 1)
                         xml = GraphFilesParser.parseDimacs(str);
                     else if (fileToOpen.name.lastIndexOf(".gxml") == fileToOpen.name.length - 4 - 1)
@@ -91,7 +98,20 @@
                     Alert.show("" + error.errorID + ": " + error.message, "File " + fileToOpen.nativePath + fileToOpen.name + " cannot be read");
                 }
                 
-                graphXMLData = xml;
+                ModelLocator.instance.graphXMLData = xml;
+                
+                //add vertex names to set becouse creating new vertex requires unique name
+                var i : int = 0;
+                while (xml.Vertex[i]) {
+                    ModelLocator.instance.addVertex(xml.Vertex[i]);
+                    i++;
+                }
+            }
+            
+            private function creationComplete() : void {
+                //roamer listens for graph changes (creatinf first vertex in empty graph)
+                ModelController.instance.addEventListener(GraphChangeEvent.TYPE_GRAPH_CHANGE_EVENT, roamerView.refresh);
+                ModelController.instance.addEventListener(GraphChangeEvent.TYPE_GRAPH_CHANGE_EVENT, springView.refresh);
             }
             
         ]]>

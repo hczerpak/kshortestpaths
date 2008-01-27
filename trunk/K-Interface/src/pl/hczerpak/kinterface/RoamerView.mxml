@@ -10,7 +10,7 @@
         change="if (infoText != null) infoText.text = roamer.fullNodeCount + ' items, ' + roamer.visibleNodeCount + ' visible.';" 
         right="0" left="0" top="0" x="0" y="0" bottom="0"
         dataProvider="{_dataProvider}"
-        xmlNames="{['Node','Edge','fromID','toID']}"
+        xmlNames="{['Vertex','Edge','fromID','toID']}"
         >
         
         <adobe:removeItemEffect>
@@ -34,13 +34,15 @@
         <mx:Label width="150" text="max degrees of separation" fontSize="9" textAlign="left"/>
         <mx:CheckBox label="Show history" selected="true" change="roamer.showHistory = event.currentTarget.selected"/>
         <mx:CheckBox selected="true" id="autoFit" label="Auto-fit items to window"/>
-        <mx:Button label="Hide current item" click="roamer.hideItem(roamer.currentItem)" fontSize="9"/>
+        <mx:Button label="Hide current item" click="hideCurrentItem()" fontSize="9"/>
         <mx:HSlider width="150" visible="false" id="motionThreshold" value="{roamer.motionThreshold}" minimum="0.01" maximum="2" liveDragging="true"/>
         <mx:Label width="150" visible="false"  text="motion stop threshold" fontSize="9" textAlign="center"/>
     </mx:VBox>
     
     <mx:Script>
         <![CDATA[
+            import pl.hczerpak.kinterface.dispatcher.GraphChangeEvent;
+            import pl.hczerpak.kinterface.model.ModelLocator;
             import pl.hczerpak.kinterface.renderer.DirectedEdgeRenderer;
             import mx.rpc.events.ResultEvent;
             
@@ -65,6 +67,17 @@
             
             public function itemDoubleClick(event: Event): void {
                 roamer.currentItem = event.currentTarget.data;
+            }
+            
+            private function hideCurrentItem() : void {
+                if (roamer.currentItem)
+                    roamer.hideItem(roamer.currentItem);
+            }
+            
+            public function refresh(event : GraphChangeEvent) : void {
+                if (roamer) {
+                    roamer.refresh();
+                }
             }
         ]]>
     </mx:Script>

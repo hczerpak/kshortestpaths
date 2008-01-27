@@ -29,17 +29,9 @@ package pl.hczerpak.kinterface.renderer
                 color = settings.color;
             }
 
+            graphics.lineStyle(thickness, color, alpha);
             graphics.beginFill(0);
-            graphics.lineStyle(thickness, 0xFF0000, alpha);
             graphics.moveTo(fromX, fromY);
-            graphics.lineTo(fromX + (toX - fromX)/10, fromY + (toY - fromY)/10);
-            
-            graphics.lineStyle(thickness, color);
-            graphics.moveTo(fromX + (toX - fromX)/10, fromY + (toY - fromY)/10);
-            graphics.lineTo(toX - (toX - fromX)/10, toX - (toY - fromY)/10);
-            
-            graphics.lineStyle(thickness, 0x00FF00);
-            graphics.moveTo(toX - (toX - fromX)/10, toX - (toY - fromY)/10);
             graphics.lineTo(toX, toY);
             graphics.endFill();
             

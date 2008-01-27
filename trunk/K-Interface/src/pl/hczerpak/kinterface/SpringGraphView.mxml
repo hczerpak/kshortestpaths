@@ -7,8 +7,9 @@
         motionThreshold="{motionThreshold.value}"
         right="0" left="0" top="0"
         dataProvider="{_dataProvider}"
-        xmlNames="{['Node','Edge','fromID','toID']}"
+        xmlNames="{['Vertex','Edge','fromID','toID']}"
         x="0" y="0"
+        
         >
         
         <adobe:removeItemEffect>
@@ -35,6 +36,7 @@
     
     <mx:Script>
         <![CDATA[
+            import pl.hczerpak.kinterface.dispatcher.GraphChangeEvent;
             import pl.hczerpak.kinterface.renderer.DirectedEdgeRenderer;
             import mx.rpc.events.ResultEvent;
             
@@ -52,6 +54,11 @@
             public function set dataProvider(dataXML : XML) : void {
                 _dataProvider = dataXML;
                 maxDistanceFromCurrent.value = 2;
+            }
+            
+            public function refresh(event : GraphChangeEvent) : void {
+                if (springGraph)
+                    springGraph.refresh();
             }
         ]]>
     </mx:Script>

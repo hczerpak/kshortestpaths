@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" title="New vertex wizard"
+    creationComplete="creationComplete()">
+    
+    <mx:Script>
+        <![CDATA[
+            import pl.hczerpak.kinterface.dispatcher.GraphChangeEvent;
+            import pl.hczerpak.kinterface.model.ModelController;
+            import pl.hczerpak.kinterface.model.ModelLocator;
+            import mx.managers.PopUpManager;
+            
+            private function creationComplete() : void {
+                PopUpManager.centerPopUp(this);
+            }
+            
+            private function close():void {
+                PopUpManager.removePopUp(this);
+            }
+            
+            private function addVertex() : void {
+                var vertex : XML = new XML("<Vertex id=\"" + nameField.text + "\" prop=\"" + nameField.text + "\" />");
+                ModelLocator.instance.addVertex(vertex);
+                ModelLocator.instance.graphXMLData.appendChild(vertex);
+                ModelController.instance.dispatchEvent(new GraphChangeEvent());
+                close();
+            }
+        ]]>
+    </mx:Script>
+    
+    <mx:StringValidator 
+        property="text"
+        source="{nameField}"
+        requiredFieldError="This field is required."
+        tooShortError="Name is too short. Put at least 2 characters."
+        tooLongError="Name is too long"
+        maxLength="30"
+        minLength="2"
+        id="nameValidator"        
+        trigger="{createButton}" triggerEvent="click" 
+        />
+    
+    <mx:Form width="100%">
+        <mx:FormItem required="true" label="Name">
+            <mx:TextInput id="nameField"/>
+        </mx:FormItem>
+        <mx:HBox width="100%" horizontalAlign="right">
+            <mx:Button label="Create and close" click="addVertex()" id="createButton"/>
+            <mx:Button label="Cancel" click="close()"/>
+        </mx:HBox>
+    </mx:Form>
+    
+    
+</mx:Panel>

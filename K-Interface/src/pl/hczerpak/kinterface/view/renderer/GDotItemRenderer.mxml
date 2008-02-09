@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:renderer="pl.hczerpak.kinterface.view.renderer.*">
+    <renderer:Dot x="0" y="0" width="20" height="20"/> 
+</mx:Canvas>

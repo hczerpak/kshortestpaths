@@ -4,9 +4,8 @@
     
     <mx:Script>
         <![CDATA[
+            import pl.hczerpak.kinterface.controller.dispatcher.GraphChangeEvent;
             import com.adobe.flex.extras.controls.springgraph.Item;
-            import pl.hczerpak.kinterface.dispatcher.GraphChangeEvent;
-            import pl.hczerpak.kinterface.model.ModelController;
             import pl.hczerpak.kinterface.model.ModelLocator;
             import mx.managers.PopUpManager;
             
@@ -18,10 +17,11 @@
                 PopUpManager.removePopUp(this);
             }
             
-            private function addEdge() : void {
-                ModelLocator.instance.graph.addVertex(new Item(nameField.text));
-                ModelController.instance.dispatchEvent(new GraphChangeEvent());
-                close();
+            private function addVertex() : void {
+                if (nameField.text && nameField.text.length > 0) {
+                    ModelLocator.instance.graph.add(new Item(nameField.text));
+                    close();
+                }
             }
         ]]>
     </mx:Script>

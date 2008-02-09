@@ -1,10 +1,8 @@
 package pl.hczerpak.kinterface.model
 {
-    import flash.events.EventDispatcher;
+    import pl.hczerpak.kinterface.controller.dispatcher.KEventDispatcher;
     
-	[Event(name=GraphChangeEvent.TYPE_GRAPH_CHANGE_EVENT, type="pl.hczerpak.kinterface.controller.dispatcher.GraphChangeEvent")]
-	
-    public class ModelController extends EventDispatcher {
+    public class ModelController extends KEventDispatcher {
         
         private static var _instance : ModelController = null;
         

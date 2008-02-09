@@ -46,6 +46,7 @@
     
     <mx:Script>
         <![CDATA[
+            import com.adobe.flex.extras.controls.springgraph.Item;
             import pl.hczerpak.kinterface.controller.dispatcher.GraphChangeEvent;
             import pl.hczerpak.kinterface.view.popups.NewNodePanel;
             import pl.hczerpak.kinterface.controller.util.GraphFilesParser;
@@ -82,30 +83,25 @@
             
             private function fileSelected(event : Event) : void {
                 var stream : FileStream = new FileStream();
-                var xml : XML = null;
-                try 
-                {
+                 try 
+                { 
                     fileToOpen = event.target as File;
                     stream.open(fileToOpen, FileMode.READ);
                     var str : String = stream.readUTFBytes(stream.bytesAvailable);
                     stream.close();
                     
                     if (fileToOpen.name.lastIndexOf(".gr") == fileToOpen.name.length - 3 - 1)
-                        xml = GraphFilesParser.parseDimacs(str);
+                        ModelLocator.instance.graph = GraphFilesParser.parseDimacs(str);
                     else if (fileToOpen.name.lastIndexOf(".gxml") == fileToOpen.name.length - 4 - 1)
-                        xml = GraphFilesParser.parseGXML(str);
-                } catch (error : Error)  {
+                        ModelLocator.instance.graph = GraphFilesParser.parseGXML(str);
+                        
+                    //add vertex names to set becouse creating new vertex requires unique name
+                    for each (var item : Item in ModelLocator.instance.graph.nodes) 
+                        ModelLocator.instance.addNode(item.id);
+                    
+                 } catch (error : Error)  {
                     Alert.show("" + error.errorID + ": " + error.message, "File " + fileToOpen.nativePath + fileToOpen.name + " cannot be read");
-                }
-                
-                //ModelLocator.instance.graphXMLData = xml;
-                
-                //add vertex names to set becouse creating new vertex requires unique name
-                var i : int = 0;
-                while (xml.Vertex[i]) {
-                    ModelLocator.instance.addVertex(xml.Vertex[i]);
-                    i++;
-                }
+                } 
             }
             
             private function creationComplete() : void {

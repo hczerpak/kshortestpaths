@@ -1,10 +1,10 @@
-package pl.hczerpak.kinterface.dispatcher
+package pl.hczerpak.kinterface.controller.dispatcher
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.utils.Dictionary;
 	
-	[Event(name="GraphChangeEvent", type="pl.hczerpak.kinterface.dispatcher.GraphChangeEvent")]
+	[Event(name=GraphChangeEvent.TYPE_GRAPH_CHANGE_EVENT, type="pl.hczerpak.kinterface.controller.dispatcher.GraphChangeEvent")]
 
     /** Event dispatcher with ability to run certain commands */
 	public class KEventDispatcher extends EventDispatcher

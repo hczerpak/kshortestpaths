@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Text xmlns:mx="http://www.adobe.com/2006/mxml"
+    fontSize="10" 
+    text="{data.id}" 
+    selectable="false" 
+    y="0" x="0" 
+    color="#FFFFFF" 
+    fontWeight="bold" 
+    fontFamily="Verdana"/>

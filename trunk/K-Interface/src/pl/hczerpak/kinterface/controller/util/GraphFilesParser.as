@@ -5,27 +5,30 @@ package pl.hczerpak.kinterface.controller.util
     
     public class GraphFilesParser
     {
-        public static function parseDimacs(dimacsFileContent : String) : XML {
+        public static function parseDimacs(dimacsFileContent : String) : Graph {
             return null;
         }
         
-        public static function parseGXML(xmlContent : String) : XML {
+        public static function parseGXML(xmlContent : String) : Graph {
             var graph : Graph = new Graph(); 
             var xml : XML = new XML(xmlContent);
             
             var i : int = 0;
-            while (xml.Vertex[i]) {
-                graph.add(new Item(xml.Vertex[i].@id));
+            while (xml.Node[i]) {
+                graph.add(new Item(xml.Node[i].@id));
                 i++;
             }
             
             i = 0;
-            while (xml.Edge[i]) {
-                graph.link(graph.find(xml.Edge[i].@fromID), graph.find(xml.Edge[i].@toID)); 
+            while (xml.Edge[i]) {   
+                var source : String = xml.Edge[i].@fromID;
+                var target : String = xml.Edge[i].@toID;
+                       
+                graph.link(graph.find(source), graph.find(target)); 
                 i++;
             }
             
-            return new XML(xmlContent);
+            return graph;
         }
     }
 }

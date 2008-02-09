@@ -2,16 +2,15 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
     backgroundAlpha="{(parentComponent.roamer.dataProvider as Graph).numLinks(data as Item) > 1 ? 1.0 : 0.3}"
     filters="{calcFilters(parentComponent.roamer.currentItem, data as Item)}" 
-    xmlns:ns1="pl.hczerpak.kinterface.components.*"
     creationComplete="creationComplete()"
-    >    
+    xmlns:components="pl.hczerpak.kinterface.view.components.*">    
     
-    <ns1:Circle x="0" y="0" width="100%" height="100%"/>            
+    <components:Circle x="0" y="0" width="100%" height="100%"/>            
     <mx:Text fontSize="10" text="{data.data.@prop}" selectable="false" y="0" x="0" color="#FFFFFF" fontWeight="bold" fontFamily="Verdana"/>    
     
     <mx:Script>
         <![CDATA[
-            import pl.hczerpak.kinterface.RoamerView;
+            import pl.hczerpak.kinterface.view.components.RoamerView;
             import com.adobe.flex.extras.controls.springgraph.Roamer;
             import mx.effects.Glow;
             import com.adobe.flex.extras.controls.springgraph.Graph;

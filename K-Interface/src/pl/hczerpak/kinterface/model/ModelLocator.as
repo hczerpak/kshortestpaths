@@ -1,6 +1,7 @@
 package pl.hczerpak.kinterface.model {
-    import com.adobe.flex.extras.controls.springgraph.Graph;
     
+    import com.adobe.flex.extras.controls.springgraph.Graph;
+    import com.adobe.flex.extras.controls.springgraph.Item;
     
     public class ModelLocator {
         
@@ -14,6 +15,10 @@ package pl.hczerpak.kinterface.model {
         public function ModelLocator(enforcer : SingletonEnforcer) : void { }
         
         [Bindable] public var graph : Graph = new Graph();
+        
+        public function addVertex(vertexData : XML) : void {
+            graph.add(new Item(vertexData.@id));
+        }
     }
 }
 

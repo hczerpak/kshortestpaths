@@ -11,8 +11,7 @@ package pl.hczerpak.kinterface.model {
             return _instance; 
         }
         
-        public function ModelLocator(enforcer : SingletonEnforcer) : void { 
-        }
+        public function ModelLocator(enforcer : SingletonEnforcer) : void { }
         
         [Bindable] public var graph : Graph = new Graph();
     }

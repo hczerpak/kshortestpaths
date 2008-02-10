@@ -21,16 +21,16 @@
 	<filename>main</filename>
 
 	<!-- The name that is displayed in the AIR application installer. Optional. -->
-	<!-- <name></name> -->
+	<!-- <name>K-Interface</name> -->
 
 	<!-- An application version designator (such as "v1", "2.5", or "Alpha 1"). Required. -->
-	<version>v1</version>
+	<version>v0.1</version>
 
 	<!-- Description, displayed in the AIR application installer. Optional. -->
 	<!-- <description></description> -->
 
 	<!-- Copyright information. Optional -->
-	<!-- <copyright></copyright> -->
+	<copyright>Hubert Czerpak</copyright>
 
 	<!-- Settings for the application's initial window. Required. -->
 	<initialWindow>

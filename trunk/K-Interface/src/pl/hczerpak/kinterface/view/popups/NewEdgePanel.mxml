@@ -4,17 +4,17 @@
     
     <mx:Script>
         <![CDATA[
+            import pl.hczerpak.kinterface.controller.Controller;
             import com.adobe.flex.extras.controls.springgraph.Graph;
             import pl.hczerpak.kinterface.controller.dispatcher.GraphChangeEvent;
             import com.adobe.flex.extras.controls.springgraph.Item;
-            import pl.hczerpak.kinterface.model.ModelController;
             import pl.hczerpak.kinterface.model.ModelLocator;
             import mx.managers.PopUpManager;
             
             [Bindable] private var _comboDP : Object = null;
             
             private function creationComplete() : void {
-                _comboDP = ModelLocator.instance.nodeNames;
+                _comboDP = ModelLocator.instance.nodeIds;
                 
                 PopUpManager.centerPopUp(this);
             }
@@ -31,7 +31,7 @@
                 if (sourceName && targetName) {
                     g.link(g.find(sourceName), g.find(targetName));
                 
-                    ModelController.instance.dispatchEvent(new GraphChangeEvent());
+                    Controller.instance.dispatchEvent(new GraphChangeEvent(GraphChangeEvent.EDGE_ADDED));
                 }
                 close();
             }

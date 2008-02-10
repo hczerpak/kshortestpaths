@@ -6,12 +6,11 @@
     verticalAlign="top"
     horizontalAlign="left"
     backgroundGradientColors="[#888888,#333333]"
-    height="600" width="800" creationComplete="creationComplete()" xmlns:components="pl.hczerpak.kinterface.view.components.*">
+    height="600" width="800" creationComplete="creationComplete()" xmlns:components="pl.hczerpak.kinterface.view.components.*" viewSourceURL="srcview/index.html">
    
     <mx:ViewStack id="mainVS" width="100%" height="100%" backgroundColor="#FFFFFF" backgroundAlpha="0.5">
         <components:RoamerView id="roamerView" height="100%" width="100%" label="Roamer" dataProvider="{ModelLocator.instance.graph}" />
         <components:SpringGraphView id="springView" height="100%" width="100%" label="Spring View" dataProvider="{ModelLocator.instance.graph}"/>
-        <mx:Canvas label="Branching structure" enabled="false"/>
         <mx:Canvas label="Results" enabled="false"/>
     </mx:ViewStack>
     
@@ -32,7 +31,7 @@
                     <menuitem label="Exit" data="exit"/>
                 </menuitem>
                 <menuitem label="Edit" data="">
-                    <menuitem label="New vertex" data="new_node"/>
+                    <menuitem label="New node" data="new_node"/>
                     <menuitem label="New edge" data="new_edge"/>
                 </menuitem>
                 <menuitem label="Information" data="">
@@ -46,13 +45,13 @@
     
     <mx:Script>
         <![CDATA[
+            import pl.hczerpak.kinterface.controller.Controller;
             import pl.hczerpak.kinterface.view.popups.NewEdgePanel;
             import com.adobe.flex.extras.controls.springgraph.Graph;
             import com.adobe.flex.extras.controls.springgraph.Item;
             import pl.hczerpak.kinterface.controller.dispatcher.GraphChangeEvent;
             import pl.hczerpak.kinterface.view.popups.NewNodePanel;
-            import pl.hczerpak.kinterface.controller.util.GraphFilesParser;
-            import pl.hczerpak.kinterface.model.ModelController;
+            import pl.hczerpak.kinterface.controller.util.GraphReader;
             import mx.events.IndexChangedEvent;
             import mx.core.IFlexDisplayObject;
             import mx.managers.PopUpManager;
@@ -67,6 +66,8 @@
             
             private function menuHandler(event : MenuEvent) : void  {
                 var menuID : String = event.item.@data;
+                
+                trace("[main] MenuHandler: " + menuID);
                 
                 switch (menuID) {
                     
@@ -97,26 +98,26 @@
                         break;
                         
                     case "exit" :
-                        System.exit(0);
+                        this.exit();
                         break;
                         
                     case "about_author" :
-                        
+                        Alert.show("Hubert Czerpak \nhubert.czerpak@gmail.com", "About author...");
                         break;
                         
                     case "about_application" :
-                        
+                        Alert.show("K-Interface v0.1 \nApplication for graph and K-Core results visualisation of k-shortest paths problem algorithms.", "About K-Interface app...");
                         break;
                         
                     case "about_diploma" :
-                        
+                        Alert.show("soon", "About authors diploma...");
                         break;
                 }
             }
             
             private function fileSelected(event : Event) : void {
                 var stream : FileStream = new FileStream();
-                 try 
+                try 
                 { 
                     fileToOpen = event.target as File;
                     stream.open(fileToOpen, FileMode.READ);
@@ -124,13 +125,11 @@
                     stream.close();
                     
                     if (fileToOpen.name.lastIndexOf(".gr") == fileToOpen.name.length - 3 - 1)
-                        ModelLocator.instance.graph = GraphFilesParser.parseDimacs(str);
+                        ModelLocator.instance.graph = GraphReader.parseDimacs(str);
                     else if (fileToOpen.name.lastIndexOf(".gxml") == fileToOpen.name.length - 4 - 1)
-                        ModelLocator.instance.graph = GraphFilesParser.parseGXML(str);
+                        GraphReader.readGXML(str); //reads graph data to ModelLocator.instance.graph
                         
-                    //add vertex names to set becouse creating new vertex requires unique name
-                    for each (var item : Item in ModelLocator.instance.graph.nodes) 
-                        ModelLocator.instance.addNode(item.id);
+                    Controller.instance.dispatchEvent(new GraphChangeEvent(GraphChangeEvent.NODE_ADDED));
                     
                  } catch (error : Error)  {
                     Alert.show("" + error.errorID + ": " + error.message, "File " + fileToOpen.nativePath + fileToOpen.name + " cannot be read");
@@ -138,9 +137,18 @@
             }
             
             private function creationComplete() : void {
-                //roamer listens for graph changes (creatinf first vertex in empty graph)
-                ModelController.instance.addEventListener(GraphChangeEvent.TYPE_GRAPH_CHANGE_EVENT, roamerView.refresh);
-                ModelController.instance.addEventListener(GraphChangeEvent.TYPE_GRAPH_CHANGE_EVENT, springView.refresh);
+                //roamer listens for graph changes
+                trace("[main] Registering listeners...");
+                
+                Controller.instance.addEventListener(GraphChangeEvent.NODE_ADDED, roamerView.refresh);
+                Controller.instance.addEventListener(GraphChangeEvent.NODE_REMOVED, roamerView.refresh);
+                Controller.instance.addEventListener(GraphChangeEvent.EDGE_ADDED, roamerView.refresh);
+                Controller.instance.addEventListener(GraphChangeEvent.EDGE_REMOVED, roamerView.refresh);
+                
+                Controller.instance.addEventListener(GraphChangeEvent.NODE_ADDED, springView.refresh);
+                Controller.instance.addEventListener(GraphChangeEvent.NODE_REMOVED, springView.refresh);
+                Controller.instance.addEventListener(GraphChangeEvent.EDGE_ADDED, springView.refresh);
+                Controller.instance.addEventListener(GraphChangeEvent.EDGE_REMOVED, springView.refresh);
             }
             
         ]]>

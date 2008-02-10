@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" title="New vertex wizard"
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" title="New node wizard"
     creationComplete="creationComplete()">
     
     <mx:Script>
         <![CDATA[
+            import pl.hczerpak.kinterface.controller.Controller;
             import pl.hczerpak.kinterface.controller.dispatcher.GraphChangeEvent;
             import com.adobe.flex.extras.controls.springgraph.Item;
             import pl.hczerpak.kinterface.model.ModelLocator;
@@ -17,9 +18,11 @@
                 PopUpManager.removePopUp(this);
             }
             
-            private function addVertex() : void {
+            private function addNode() : void {
                 if (nameField.text && nameField.text.length > 0) {
                     ModelLocator.instance.graph.add(new Item(nameField.text));
+                    ModelLocator.instance.registerNodeID(nameField.text);
+                    Controller.instance.dispatchEvent(new GraphChangeEvent(GraphChangeEvent.NODE_ADDED));
                     close();
                 }
             }
@@ -47,7 +50,7 @@
                 <mx:Button label="Cancel" click="close()"/>
             </mx:HBox>
             <mx:HBox width="100%" horizontalAlign="right">
-                <mx:Button label="Create and close" click="addVertex()" id="createButton"/>
+                <mx:Button label="Create and close" click="addNode()" id="createButton"/>
             </mx:HBox>
         </mx:HBox>
     </mx:Form>

@@ -4,6 +4,7 @@
     
     <mx:Script>
         <![CDATA[
+            import com.adobe.flex.extras.controls.springgraph.Graph;
             import pl.hczerpak.kinterface.controller.dispatcher.GraphChangeEvent;
             import com.adobe.flex.extras.controls.springgraph.Item;
             import pl.hczerpak.kinterface.model.ModelController;
@@ -13,7 +14,7 @@
             [Bindable] private var _comboDP : Object = null;
             
             private function creationComplete() : void {
-                _comboDP = ModelLocator.instance.graph.nodes;
+                _comboDP = ModelLocator.instance.nodeNames;
                 
                 PopUpManager.centerPopUp(this);
             }
@@ -23,29 +24,36 @@
             }
             
             private function addEdge() : void {
+                var g : Graph = ModelLocator.instance.graph;
+                var sourceName : String = sourceVertexCB.selectedItem as String;
+                var targetName : String = targetVertexCB.selectedItem as String;
                 
-                var source : Item = sourceVertexCB.selectedItem as Item;
-                var target : Item = targetVertexCB.selectedItem as Item;
+                if (sourceName && targetName) {
+                    g.link(g.find(sourceName), g.find(targetName));
                 
-                ModelLocator.instance.graph.link(source, target);
-                
-                ModelController.instance.dispatchEvent(new GraphChangeEvent());
+                    ModelController.instance.dispatchEvent(new GraphChangeEvent());
+                }
                 close();
             }
+            
+            private function comboLabelFunction(item : Object) : String {
+                return item as String;
+            }
+
         ]]>
     </mx:Script>
     
-    <mx:StringValidator 
+    <mx:NumberValidator
         property="text"
-        source="{nameField}"
+        source="{weight}"
+        required="true"
         requiredFieldError="This field is required."
-        tooShortError="Name is too short. Put at least 2 characters."
-        tooLongError="Name is too long"
-        maxLength="30"
-        minLength="2"
-        id="nameValidator"        
+        lowerThanMinError="Weight cannot be negative"
+        minValue="0"
+        id="weightValidator"        
         trigger="{createButton}" triggerEvent="click" 
         />
+        
     <mx:NumberValidator
         source="{sourceVertexCB}"
         required="true"
@@ -68,20 +76,20 @@
     
     <mx:Form width="100%">
         <mx:FormItem required="true" label="Source vertex" width="100%">
-            <mx:ComboBox id="sourceVertexCB" width="100%"/>
+            <mx:ComboBox id="sourceVertexCB" width="100%" labelFunction="comboLabelFunction" dataProvider="{_comboDP}" />
         </mx:FormItem>
         <mx:FormItem required="true" label="Target vertex" width="100%">
-            <mx:ComboBox id="targetVertexCB" width="100%"/>
+            <mx:ComboBox id="targetVertexCB" width="100%" labelFunction="comboLabelFunction" dataProvider="{_comboDP}" />
         </mx:FormItem>
         <mx:FormItem required="true" label="Weigth" width="100%">
-            <mx:TextInput width="100%"/>
+            <mx:TextInput width="100%" id="weight"/>
         </mx:FormItem>
         <mx:HBox width="100%" horizontalAlign="right">
             <mx:HBox width="100%" horizontalAlign="left">
                 <mx:Button label="Cancel" click="close()"/>
             </mx:HBox>
             <mx:HBox width="100%" horizontalAlign="right">
-                <mx:Button label="Create and close" click="addEdge()" id="createButton"/>
+                <mx:Button label="Create and close" click="addEdge()" id="createButton" />
             </mx:HBox>
         </mx:HBox>
     </mx:Form>

@@ -32,7 +32,7 @@
                     <menuitem label="Exit" data="exit"/>
                 </menuitem>
                 <menuitem label="Edit" data="">
-                    <menuitem label="New vertex" data="new_vertex"/>
+                    <menuitem label="New vertex" data="new_node"/>
                     <menuitem label="New edge" data="new_edge"/>
                 </menuitem>
                 <menuitem label="Information" data="">
@@ -46,6 +46,8 @@
     
     <mx:Script>
         <![CDATA[
+            import pl.hczerpak.kinterface.view.popups.NewEdgePanel;
+            import com.adobe.flex.extras.controls.springgraph.Graph;
             import com.adobe.flex.extras.controls.springgraph.Item;
             import pl.hczerpak.kinterface.controller.dispatcher.GraphChangeEvent;
             import pl.hczerpak.kinterface.view.popups.NewNodePanel;
@@ -62,23 +64,54 @@
             
             //file opened fron harddisc
             private var fileToOpen : File;
-            //file extension filter
-            private var graphFilter : FileFilter = new FileFilter("Graph files (*.gr, *.gxml)", "*.gr;*.gxml");
             
             private function menuHandler(event : MenuEvent) : void  {
-                if (event.item.@data == "open") {
-                    fileToOpen = new File();
-                    fileToOpen.addEventListener(Event.SELECT, fileSelected);
-                    try {
-                        fileToOpen.browseForOpen("Open graph file", [graphFilter]);
-                    } catch (error:Error) {
-                        trace("Failed:", error.message)
-                    }
-                } else
+                var menuID : String = event.item.@data;
                 
-                if (event.item.@data == "new_vertex") 
-                    PopUpManager.createPopUp(this, NewNodePanel, true);
+                switch (menuID) {
+                    
+                    case "open" :
+                        fileToOpen = new File();
+                        fileToOpen.addEventListener(Event.SELECT, fileSelected);
+                        try {
+                            fileToOpen.browseForOpen("Open graph file", [new FileFilter("Graph files (*.gr, *.gxml)", "*.gr;*.gxml")]);
+                        } catch (error:Error) {
+                            trace("Failed: ", error.message)
+                        }
+                        break;
+                        
+                    case "save" :
+                        
+                        break;
+                        
+                    case "new" :
+                        ModelLocator.instance.graph = new Graph();
+                        break;
                 
+                    case "new_node" :
+                        PopUpManager.createPopUp(this, NewNodePanel, true);
+                        break;
+                        
+                    case "new_edge" :
+                        PopUpManager.createPopUp(this, NewEdgePanel, true);
+                        break;
+                        
+                    case "exit" :
+                        System.exit(0);
+                        break;
+                        
+                    case "about_author" :
+                        
+                        break;
+                        
+                    case "about_application" :
+                        
+                        break;
+                        
+                    case "about_diploma" :
+                        
+                        break;
+                }
             }
             
             private function fileSelected(event : Event) : void {

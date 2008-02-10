@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" xmlns:ns1="com.flexibleexperiments.primitiveIcons.*" xmlns:adobe="http://www.adobe.com/2006/fc">
+    <adobe:SpringGraph id="springGraph" bottom="0" 
+        itemRenderer="pl.hczerpak.kinterface.view.renderer.GTextItemRenderer"
+        repulsionFactor="{repulsion.value}" 
+        autoFit="{autoFit.selected}"
+        motionThreshold="{motionThreshold.value}"
+        right="0" left="0" top="0"
+        dataProvider="{_dataProvider}"
+        x="0" y="0"
+        >
+        
+        <adobe:removeItemEffect>
+            <mx:Fade alphaFrom="1" alphaTo="0" duration="1000"/>                
+        </adobe:removeItemEffect>
+
+        <adobe:addItemEffect>
+            <mx:Fade alphaFrom="0" alphaTo="1" duration="1000"/>
+        </adobe:addItemEffect>
+    </adobe:SpringGraph>
+    
+    
+    <mx:VBox x="10" y="10">
+        <mx:Text text="SpringGraph View" fontSize="12" fontWeight="bold"/>
+        <mx:Text text="preview only" id="infoText" fontSize="9"  color="#FF0000" fontWeight="bold"/>
+        <mx:HSlider width="150" id="repulsion" value="{springGraph.repulsionFactor}" minimum="0.01" maximum="1.5" liveDragging="true"/>
+        <mx:Label width="150" text="item spacing" fontSize="9" textAlign="center"/>
+        <mx:HSlider width="150" id="maxDistanceFromCurrent" value="3" minimum="1" maximum="5" liveDragging="true" snapInterval="1"/>
+        <mx:Label width="150" text="max degrees of separation" fontSize="9" textAlign="left"/>
+        <mx:CheckBox selected="true" id="autoFit" label="Auto-fit items to window"/>
+        <mx:HSlider width="150" visible="false" id="motionThreshold" value="{springGraph.motionThreshold}" minimum="0.01" maximum="2" liveDragging="true"/>
+        <mx:Label width="150" visible="false"  text="motion stop threshold" fontSize="9" textAlign="center"/>
+    </mx:VBox>
+    
+    <mx:Script>
+        <![CDATA[
+            import pl.hczerpak.kinterface.view.renderer.DirectedEdgeRenderer;
+            import pl.hczerpak.kinterface.controller.dispatcher.GraphChangeEvent;
+            import mx.rpc.events.ResultEvent;
+            
+            [Bindable] private var _dataProvider : Object = null;
+            
+            private function creationComplete(): void {
+                springGraph.repulsionFactor = 0.4;
+                springGraph.edgeRenderer= new DirectedEdgeRenderer();
+            }
+            
+            [Bindable] public function get dataProvider() : Object {
+                return _dataProvider;
+            }
+            
+            public function set dataProvider(dataObject : Object) : void {
+                _dataProvider = dataObject;
+                maxDistanceFromCurrent.value = 2;
+            }
+            
+            public function refresh(event : GraphChangeEvent) : void {
+                if (springGraph)
+                    springGraph.refresh();
+            }
+        ]]>
+    </mx:Script>
+</mx:Canvas>

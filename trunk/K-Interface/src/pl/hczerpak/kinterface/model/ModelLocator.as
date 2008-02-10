@@ -2,6 +2,8 @@ package pl.hczerpak.kinterface.model {
     
     import com.adobe.flex.extras.controls.springgraph.Graph;
     
+    import mx.collections.ArrayCollection;
+    
     public class ModelLocator {
         
         private static var _instance : ModelLocator = null;
@@ -15,14 +17,20 @@ package pl.hczerpak.kinterface.model {
          
         [Bindable] public var graph : Graph = new Graph();
        
-        private var nodeNames : Object = new Object();
+        private var _nodeNames : Object = new Object();
+        private var _nodeNamesCollection : ArrayCollection = new ArrayCollection();
         
         public function exists(nodeName : String) : Boolean {
-            return nodeNames.hasOwnProperty(nodeName);
+            return _nodeNames.hasOwnProperty(nodeName);
         }
         
         public function addNode(nodeName : String) : void {
-            nodeNames[nodeName] = nodeName;
+            _nodeNames[nodeName] = nodeName;
+            _nodeNamesCollection.addItem(nodeName);
+        }
+        
+        public function get nodeNames() : ArrayCollection {
+            return _nodeNamesCollection;
         }
     }
 }

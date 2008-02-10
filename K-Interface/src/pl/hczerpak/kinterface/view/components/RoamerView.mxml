@@ -73,8 +73,14 @@
             }
             
             public function refresh(event : GraphChangeEvent) : void {
+                trace("[RoamerView] Refresh called: " + event.type);
+                
                 if (roamer) {
                     roamer.refresh();
+                    
+                    if (!roamer.currentItem && event.type == GraphChangeEvent.NODE_ADDED) {
+                        roamer.currentItem = event.node;
+                    }
                 }
             }
         ]]>

@@ -1,6 +1,10 @@
 package pl.czerpak.algorithm.replacement;
 
+import java.util.List;
+
 import pl.czerpak.model.graph.DirectedGraph;
+import pl.czerpak.model.graph.Edge;
+import pl.czerpak.model.graph.Path;
 import pl.czerpak.model.pbs.BranchEquivalenceClass;
 import pl.czerpak.model.pbs.Node;
 import pl.czerpak.model.pbs.NodeEquivalenceClass;
@@ -17,10 +21,6 @@ public class ReplacementTestCase extends TestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-	}
-
-	public void testReplacement() {
-		fail("Not yet implemented"); // TODO
 	}
 
 	public void testGetReplacement() {
@@ -40,8 +40,19 @@ public class ReplacementTestCase extends TestCase {
 				eq.getShortestPath(), 
 				ti.getBranches().iterator().next());
 		
+		Path shortestPath = eq2.getShortestPath();
 		
-		fail("Not yet implemented"); // TODO
+		List<Edge> edges = shortestPath.getEdgesSequence();
+		
+		assertEquals(g.getVerticles().get(0).getName(), edges.get(0).getSource().getName());
+		assertEquals(g.getVerticles().get(2).getName(), edges.get(1).getTarget().getName());
+		assertEquals(4, edges.size());
+		assertEquals(4., edges.get(0).getWeight());
+		assertEquals(11., edges.get(1).getWeight());
+		
+		assertEquals(40., shortestPath.getWeight());
+		
+		
 	}
 
 }

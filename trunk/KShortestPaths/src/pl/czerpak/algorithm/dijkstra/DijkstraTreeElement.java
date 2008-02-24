@@ -15,7 +15,6 @@ public class DijkstraTreeElement {
 	private List<DijkstraTreeElement> children;
 
 	private Vertex vertex;
-
 	private String name;
 
 	public DijkstraTreeElement(Vertex vertex) {

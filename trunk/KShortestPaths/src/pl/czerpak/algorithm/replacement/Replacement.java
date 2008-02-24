@@ -5,6 +5,7 @@ import java.util.Set;
 
 import pl.czerpak.algorithm.dijkstra.Dijkstra;
 import pl.czerpak.algorithm.dijkstra.ShortestPathTree;
+import pl.czerpak.algorithm.dijkstra.Sink;
 import pl.czerpak.commons.heap.Heap;
 import pl.czerpak.commons.heap.fibonacci.FibonacciHeap;
 import pl.czerpak.model.graph.DirectedGraph;
@@ -33,12 +34,7 @@ public class Replacement {
 		 * target
 		 **********************************************************************/
 		ShortestPathTree spiderX = new Dijkstra(graph).createShortestPathTree();
-
-		graph.reverseEdges();
-		
-		ShortestPathTree spiderY = new Dijkstra(graph).createShortestPathTree();
-
-		graph.reverseEdges();
+		Sink sinkY = new Dijkstra(graph).createSink();
 
 		Heap<Path> heap = new FibonacciHeap<Path>();
 
@@ -73,20 +69,20 @@ public class Replacement {
 			double dxa, cab, dby;
 			int j = 0;
 			for (Edge edge : setEi) {
-
-				if (spiderY.isValid(edge, j)) {
+				
+				if (sinkY.isValid(edge, j)) {
 					dxa = spiderX.getDistance(edge.getSource());
 					cab = edge.getWeight();
-					dby = spiderY.getDistance(edge.getTarget());
+					dby = sinkY.getDistance(edge.getTarget());
 					/**
 					 * Let pathWeight(a, b) = dxa + cab + dby. Observe that dxa
 					 * and dby can be computed in constant time from X and Y
 					 */
 					pathWeight = dxa + cab + dby;
 
-					path = new Path(spiderX.getPathFromRoot(edge.getSource()).getEdgesSequence(), graph.getSource(), graph.getTarget());
+					path = new Path(spiderX.getPathTo(edge.getSource()).getEdgesSequence(), graph.getSource(), graph.getTarget());
 					path.getEdgesSequence().add(edge);
-					path.getEdgesSequence().addAll(spiderY.getPathToRoot(edge.getTarget()).getEdgesSequence());
+					path.getEdgesSequence().addAll(sinkY.getPathFrom(edge.getTarget()).getEdgesSequence());
 				} else {
 					DirectedGraph g = graph.clone();
 					g.remove(edge);

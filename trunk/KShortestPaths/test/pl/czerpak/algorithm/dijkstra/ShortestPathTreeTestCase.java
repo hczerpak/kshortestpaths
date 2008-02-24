@@ -2,11 +2,11 @@ package pl.czerpak.algorithm.dijkstra;
 
 import java.util.List;
 
+import junit.framework.TestCase;
 import pl.czerpak.model.graph.DirectedGraph;
 import pl.czerpak.model.graph.Edge;
 import pl.czerpak.model.graph.Vertex;
 import pl.czerpak.util.GraphFactory;
-import junit.framework.TestCase;
 
 public class ShortestPathTreeTestCase extends TestCase {
 	
@@ -45,7 +45,7 @@ public class ShortestPathTreeTestCase extends TestCase {
 		assertEquals(3., tree.getDistance(vs.get(4)));
 		assertEquals(3., tree.getDistance(vs.get(5)));
 		
-		assertEquals(3., tree.getPathFromRoot(vs.get(7)).getWeight());
+		assertEquals(3., tree.getPathTo(vs.get(7)).getWeight());
 		
 	}
 	
@@ -56,27 +56,27 @@ public class ShortestPathTreeTestCase extends TestCase {
 
 		assertEquals(g.getSource().getId(), tree.getRoot().getVertex().getId());
 
-		assertEquals(0, tree.getPathFromRoot(g.getVerticles().get(0)).getLength());
-		assertEquals(1, tree.getPathFromRoot(g.getVerticles().get(1)).getLength());
-		assertEquals(2, tree.getPathFromRoot(g.getVerticles().get(2)).getLength());
-		assertEquals(1, tree.getPathFromRoot(g.getVerticles().get(3)).getLength());
-		assertEquals(2, tree.getPathFromRoot(g.getVerticles().get(4)).getLength());
-		assertEquals(3, tree.getPathFromRoot(g.getVerticles().get(5)).getLength());
-		assertEquals(3, tree.getPathFromRoot(g.getVerticles().get(6)).getLength());
-		assertEquals(4, tree.getPathFromRoot(g.getVerticles().get(7)).getLength());
-		assertEquals(3, tree.getPathFromRoot(g.getVerticles().get(8)).getLength());
-		assertEquals(2, tree.getPathFromRoot(g.getVerticles().get(9)).getLength());
-		assertEquals(3, tree.getPathFromRoot(g.getVerticles().get(10)).getLength());
+		assertEquals(0, tree.getPathTo(g.getVerticles().get(0)).getLength());
+		assertEquals(1, tree.getPathTo(g.getVerticles().get(1)).getLength());
+		assertEquals(2, tree.getPathTo(g.getVerticles().get(2)).getLength());
+		assertEquals(1, tree.getPathTo(g.getVerticles().get(3)).getLength());
+		assertEquals(2, tree.getPathTo(g.getVerticles().get(4)).getLength());
+		assertEquals(3, tree.getPathTo(g.getVerticles().get(5)).getLength());
+		assertEquals(3, tree.getPathTo(g.getVerticles().get(6)).getLength());
+		assertEquals(4, tree.getPathTo(g.getVerticles().get(7)).getLength());
+		assertEquals(3, tree.getPathTo(g.getVerticles().get(8)).getLength());
+		assertEquals(2, tree.getPathTo(g.getVerticles().get(9)).getLength());
+		assertEquals(3, tree.getPathTo(g.getVerticles().get(10)).getLength());
 	}
 	
 	/** 
 	 * bezsensowny test bo nie wiem co testowac
 	 */
 	public void testIsValid() {
-		DirectedGraph g = GraphFactory.graph1();
-		Dijkstra dijkstra = new Dijkstra(g);
-		ShortestPathTree tree = dijkstra.createShortestPathTree();
-		//tree.createMinblocks(tree.getPathFromRoot(g.getTarget()));
+		//DirectedGraph g = GraphFactory.graph1();
+		//Dijkstra dijkstra = new Dijkstra(g);
+		//ShortestPathTree tree = dijkstra.createShortestPathTree();
+		//tree.createMinblocks(tree.getPathTo(g.getTarget()));
 		
 //		for (int i = 0; i < g.getEdges().size(); i++)
 //			assertTrue(tree.isValid(g.getEdges().get(i), i));

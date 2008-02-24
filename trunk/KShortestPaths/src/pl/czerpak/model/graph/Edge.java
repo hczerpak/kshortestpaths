@@ -2,11 +2,15 @@ package pl.czerpak.model.graph;
 
 public class Edge {
 
+	private static long counter = 0;
+	
 	private Vertex source;
 
 	private Vertex target;
 
 	private Double weight;
+	
+	private long id = counter++;
 
 	public Edge(Vertex source, Vertex target, Double weight) {
 		if (weight < 0)
@@ -17,6 +21,9 @@ public class Edge {
 		this.weight = weight;
 	}
 	
+	/**
+	 * Usuwa połącznie z listy krawędzi wychodzących z węzła źródłowego source.
+	 */
 	public void disjoin() {
 		source.remove(this);
 	}
@@ -43,5 +50,9 @@ public class Edge {
 
 	public void setWeight(Double weight) {
 		this.weight = weight;
+	}
+	
+	public long getId() {
+		return id;
 	}
 }

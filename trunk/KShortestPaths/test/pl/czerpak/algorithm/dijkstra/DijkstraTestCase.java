@@ -129,8 +129,8 @@ public class DijkstraTestCase extends TestCase {
 		ShortestPathTree spiderY = new Dijkstra(graph).createShortestPathTree();
 		
 		assertEquals(graph.getSource().getName(), spiderY.getRoot().getVertex().getName());
-		assertEquals(3, spiderY.getPathToRoot(graph.getVerticles().get(8)).getLength());
-		assertEquals(2, spiderY.getPathToRoot(graph.getVerticles().get(9)).getLength());
+		assertEquals(3, spiderY.getPathTo(graph.getVerticles().get(8)).getLength());
+		assertEquals(2, spiderY.getPathTo(graph.getVerticles().get(9)).getLength());
 		
 		graph.reverseEdges();
 		

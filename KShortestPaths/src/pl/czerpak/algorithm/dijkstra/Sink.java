@@ -17,7 +17,7 @@ import pl.czerpak.model.graph.Vertex;
  * @author HCzerpak
  * 
  */
-public class Sink extends ShortestPathTree {
+public class Sink extends SPT_Base {
 
 	private Map<Vertex, Integer> minblocks;
 	private Map<Vertex, Integer> blocks;
@@ -71,26 +71,27 @@ public class Sink extends ShortestPathTree {
 		return minimum(h);
 	}
 
-	// private Set<Vertex>traceVerticles = new HashSet<Vertex>();
 	private void calculateBlocks() {
 		Path pathXY = dijkstra.getShortestPath();
-		// czy lista jest w kolejności root->vertex? powinna być vertex->root
+		
+		//sink -> vertex
 		List<Edge> edges = pathXY.getEdgesSequence();
 
 		DijkstraTreeElement currentElement = root;
-		// traceVerticles.add(root.getVertex());
 
 		// przejść po ścieżce i po kolei dodawać blocki do poddrzew
-		for (int i = edges.size() - 1; i >= 0; i--) {
+		for (int i = 0; i < edges.size(); i++) {
 			Vertex applyBlocksHere = edges.get(i).getSource();
-			blocks.put(applyBlocksHere, i);
-			// traceVerticles.add(applyBlocksHere);
+			blocks.put(applyBlocksHere, edges.size() - i);
+			//blocks.put(edges.get(i).getTarget(), edges.size());
 
 			for (int j = 0; j < currentElement.getChildren().size(); j++) {
-				Vertex temp = currentElement.getChildren().get(j).getVertex();
+				DijkstraTreeElement childElement = currentElement.getChildren().get(j);
+				Vertex temp = childElement.getVertex();
 				if (temp.getId() == applyBlocksHere.getId()) {
-					applyBlockNumber(currentElement, i);
-					continue;
+					applyBlockNumber(currentElement, edges.size() - i);
+					currentElement = childElement;
+					break;
 				}
 			}
 		}
@@ -116,9 +117,11 @@ public class Sink extends ShortestPathTree {
 
 	private void applyMinblock(DijkstraTreeElement parent) {
 		for (DijkstraTreeElement treeElement : parent.getChildren()) {
-			minblocks.put(treeElement.getVertex(), Math.min(blocks
-					.get(treeElement.getVertex()), minblocks.get(parent
-					.getVertex())));
+			minblocks.put(
+					treeElement.getVertex(), 
+					Math.min(
+							blocks.get(treeElement.getVertex()), 
+							minblocks.get(parent.getVertex())));
 			applyMinblock(treeElement);
 		}
 	}
@@ -152,11 +155,18 @@ public class Sink extends ShortestPathTree {
 
 	/** Returns path from vertex v to sink */
 	public Path getPathFrom(Vertex vertex) {
-		Path path = new Path(dijkstra.getEdgesSequenceFromRootToVertex(vertex),
-				vertex, root.getVertex());
+		Path path = new Path(
+				dijkstra.getEdgesSequenceFromRootToVertex(vertex),
+				vertex, 
+				root.getVertex());
 
 		Collections.reverse(path.getEdgesSequence());
 
 		return path;
+	}
+	
+	/** Returns path from root to vertex v **/
+	public Path getPathTo(Vertex vertex) {
+		throw new RuntimeException("Invalid call in sink structure");
 	}
 }

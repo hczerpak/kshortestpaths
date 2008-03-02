@@ -51,8 +51,6 @@ public class ReplacementTestCase extends TestCase {
 		assertEquals(11., edges.get(1).getWeight());
 		
 		assertEquals(40., shortestPath.getWeight());
-		
-		
 	}
 
 }

@@ -33,8 +33,8 @@ public class Replacement {
 		 * nodes, and let y be a shortest path tree from all the nodes to the
 		 * target
 		 **********************************************************************/
-		ShortestPathTree spiderX = new Dijkstra(graph).createShortestPathTree();
-		Sink sinkY = new Dijkstra(graph).createSink();
+		ShortestPathTree spiderX = new ShortestPathTree(new Dijkstra(graph));
+		Sink sinkY = new Sink(new Dijkstra(graph.clone().reverseEdges()));
 
 		Heap<Path> heap = new FibonacciHeap<Path>();
 
@@ -82,7 +82,8 @@ public class Replacement {
 
 					path = new Path(spiderX.getPathTo(edge.getSource()).getEdgesSequence(), graph.getSource(), graph.getTarget());
 					path.getEdgesSequence().add(edge);
-					path.getEdgesSequence().addAll(sinkY.getPathFrom(edge.getTarget()).getEdgesSequence());
+					Path pathToSink = sinkY.getPathFrom(edge.getTarget());
+					path.getEdgesSequence().addAll(pathToSink.getEdgesSequence());
 				} else {
 					DirectedGraph g = graph.clone();
 					g.remove(edge);

@@ -88,7 +88,7 @@ public class DirectedGraph {
 		return cloned;
 	}
 
-	public void reverseEdges() {
+	public DirectedGraph reverseEdges() {
 		Edge edge;
 		Vertex temp, source, target;
 		for (int i = 0; i < edges.size(); i++) {
@@ -106,6 +106,8 @@ public class DirectedGraph {
 		temp = this.source;
 		this.source = this.target;
 		this.target = temp;
+		
+		return this;
 	}
 
 	public String toString() {

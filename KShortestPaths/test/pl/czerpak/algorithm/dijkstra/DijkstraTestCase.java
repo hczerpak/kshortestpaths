@@ -118,24 +118,18 @@ public class DijkstraTestCase extends TestCase {
 		
 		assertEquals(3., path.getWeight());
 	}
-	
+
 	public void testCreateShortestPathTree() {
 		graph = GraphFactory.graph1();
 		
-		ShortestPathTree spiderX = new Dijkstra(graph).createShortestPathTree();
+		SPT_Base spiderX = new SPT_Base(new Dijkstra(graph));
 
 		assertEquals(graph.getSource().getName(), spiderX.getRoot().getVertex().getName());
 		
-		ShortestPathTree spiderY = new Dijkstra(graph).createShortestPathTree();
+		Sink sink = new Sink(new Dijkstra(graph.clone().reverseEdges()));
 		
-		assertEquals(graph.getSource().getName(), spiderY.getRoot().getVertex().getName());
-		assertEquals(3, spiderY.getPathTo(graph.getVerticles().get(8)).getLength());
-		assertEquals(2, spiderY.getPathTo(graph.getVerticles().get(9)).getLength());
-		
-		graph.reverseEdges();
-		
-		assertEquals(graph.getTarget().getName(), spiderY.getRoot().getVertex().getName());
-		
-		
+		assertEquals(graph.getTarget().getName(), sink.getRoot().getVertex().getName());
+		assertEquals(2, sink.getPathFrom(graph.getVerticles().get(8)).getLength());
+		assertEquals(1, sink.getPathFrom(graph.getVerticles().get(9)).getLength());
 	}
 }

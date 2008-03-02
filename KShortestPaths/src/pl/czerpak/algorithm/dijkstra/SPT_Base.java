@@ -3,15 +3,23 @@ package pl.czerpak.algorithm.dijkstra;
 import java.util.HashMap;
 import java.util.Map;
 
-import pl.czerpak.model.graph.Path;
 import pl.czerpak.model.graph.Vertex;
 
-public class ShortestPathTree {
+/**
+ * 
+ * Base class for shortestPathTreeStructures
+ * 
+ * @author HCzerpak
+ *
+ */
+public class SPT_Base {
 
 	protected DijkstraTreeElement root;
 	protected Dijkstra dijkstra;
 	
-	public ShortestPathTree(Dijkstra dijkstra) {
+	
+	
+	public SPT_Base(Dijkstra dijkstra) {
 		this.dijkstra = dijkstra;
 
 		Vertex v, u;
@@ -41,11 +49,6 @@ public class ShortestPathTree {
 				element.setParent(previousElement);
 			}
 		}
-	}
-
-	/** Returns path from root to vertex v **/
-	public Path getPathTo(Vertex vertex) {
-		return new Path(dijkstra.getEdgesSequenceFromRootToVertex(vertex), root.getVertex(), vertex);
 	}
 
 	public DijkstraTreeElement getRoot() {

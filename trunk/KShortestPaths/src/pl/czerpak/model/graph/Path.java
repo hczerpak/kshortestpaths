@@ -154,8 +154,8 @@ public class Path {
 	}
 
 	/**
-	 * Buduje pod�cie�k� zaczynaj�c od podanego indeksu kraw�dzi do ko�ca lub do
-	 * kraw�dzi podanej jako koniec.
+	 * Buduje podścieżkę zaczynając od podanego indeksu krawędzi do końca lub do
+	 * krawędzi podanej jako koniec.
 	 * 
 	 * Threshold is sharp <startIndex, endIndex>
 	 * 

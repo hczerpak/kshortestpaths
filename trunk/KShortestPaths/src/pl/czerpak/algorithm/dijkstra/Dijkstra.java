@@ -110,18 +110,6 @@ public class Dijkstra {
 		}
 		return shortestPath;
 	}
-	
-	public ShortestPathTree createShortestPathTree() {
-		return new ShortestPathTree(this);
-	}
-	
-	public Sink createSink() {
-		graph.reverseEdges();
-		Sink s = new Sink(this);
-		graph.reverseEdges();
-		
-		return s;
-	}
 
 	public Map<String, Double> getDistances() {
 		return distances;

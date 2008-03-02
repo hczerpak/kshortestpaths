@@ -38,7 +38,7 @@ public class ShortestPathTreeTestCase extends TestCase {
 		
 		Dijkstra dijkstra = new Dijkstra(g);
 		
-		ShortestPathTree tree = dijkstra.createShortestPathTree();
+		ShortestPathTree tree = new ShortestPathTree(dijkstra);
 		
 		assertEquals(3., tree.getDistance(vs.get(7)));
 		assertEquals(6., tree.getDistance(vs.get(6)));
@@ -52,7 +52,7 @@ public class ShortestPathTreeTestCase extends TestCase {
 	public void testCreateShortestPathTree() {
 		DirectedGraph g = GraphFactory.graph1();
 		Dijkstra dijkstra = new Dijkstra(g);
-		ShortestPathTree tree = dijkstra.createShortestPathTree();
+		ShortestPathTree tree = new ShortestPathTree(dijkstra);
 
 		assertEquals(g.getSource().getId(), tree.getRoot().getVertex().getId());
 

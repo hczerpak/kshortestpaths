@@ -1,7 +1,9 @@
 package pl.czerpak.model.graph;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DirectedGraph {
 
@@ -79,11 +81,37 @@ public class DirectedGraph {
 
 	public DirectedGraph clone() {
 		DirectedGraph cloned = new DirectedGraph();
-		cloned.target = target;
-		cloned.source = source;
-		cloned.verticles = verticles;
-		for (int i = 0; i < edges.size(); i++)
-			cloned.edges.add(edges.get(i));
+		Map<Vertex, Vertex> originalToClonedVertex = new HashMap<Vertex, Vertex>();
+		Map<Edge, Edge> originalToClonedEdge = new HashMap<Edge, Edge>();
+		
+		//clone verticles
+		for (Vertex original : verticles)
+			originalToClonedVertex.put(original, (Vertex)original.clone());
+		
+		//clone edges
+		for (Edge original : edges)
+			originalToClonedEdge.put(original, (Edge)original.clone());
+
+		//correct refferences to cloned edges
+		for (Vertex clonedV : originalToClonedVertex.values()) {
+			List<Edge> clonedOutgoingEdges = new ArrayList<Edge>();
+			for (Edge e : clonedV.getOutgoingEdges())
+				clonedOutgoingEdges.add(originalToClonedEdge.get(e));
+			clonedV.setOutgoingEdges(clonedOutgoingEdges);
+			
+			cloned.verticles.add(clonedV);
+		}
+
+		//correct refferences to cloned verticles
+		for (Edge clonedE : originalToClonedEdge.values()) {
+			clonedE.setSource(originalToClonedVertex.get(clonedE.getSource()));
+			clonedE.setTarget(originalToClonedVertex.get(clonedE.getTarget()));
+			
+			cloned.edges.add(clonedE);
+		}
+		
+		cloned.source = originalToClonedVertex.get(source);
+		cloned.target = originalToClonedVertex.get(target);
 
 		return cloned;
 	}

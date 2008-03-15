@@ -8,8 +8,8 @@ import pl.czerpak.commons.heap.fibonacci.FibonacciHeap;
 import pl.czerpak.commons.heap.fibonacci.FibonacciHeapElement;
 
 /**
- * Sterta Fibonacciego z przyspieszonym uaktualnianiem priorytetów elementów.
- * Szybkoœæ dzia³ania jest okupiona wiêkszym zu¿yciem pamiêci.
+ * Sterta Fibonacciego z przyspieszonym uaktualnianiem priorytetÃ³w elementÃ³w.
+ * SzybkoÅ›Ä‡ dziaÅ‚ania jest okupiona wiÄ™kszym zuÅ¼yciem pamiÄ™ci.
  */
 public class FastUpdateHeap<T> extends FibonacciHeap<T> implements Heap<T> {
 

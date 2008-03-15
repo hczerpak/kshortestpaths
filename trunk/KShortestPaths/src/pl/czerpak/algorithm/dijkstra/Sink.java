@@ -78,21 +78,19 @@ public class Sink extends SPT_Base {
 		List<Edge> edges = pathXY.getEdgesSequence();
 
 		DijkstraTreeElement currentElement = root;
+		
+		blocks.put(root.getVertex(), edges.size());
 
 		// przejść po ścieżce i po kolei dodawać blocki do poddrzew
 		for (int i = 0; i < edges.size(); i++) {
-			Vertex applyBlocksHere = edges.get(i).getSource();
+			Vertex applyBlocksHere = edges.get(i).getTarget();
 			blocks.put(applyBlocksHere, edges.size() - i);
 			//blocks.put(edges.get(i).getTarget(), edges.size());
 
 			for (int j = 0; j < currentElement.getChildren().size(); j++) {
 				DijkstraTreeElement childElement = currentElement.getChildren().get(j);
-				Vertex temp = childElement.getVertex();
-				if (temp.getId() == applyBlocksHere.getId()) {
-					applyBlockNumber(currentElement, edges.size() - i);
-					currentElement = childElement;
-					break;
-				}
+				applyBlockNumber(childElement, edges.size() - i);
+				currentElement = childElement;
 			}
 		}
 
@@ -103,7 +101,8 @@ public class Sink extends SPT_Base {
 			if (blocks.containsKey(child.getVertex())) {
 				if (blocks.get(child.getVertex()) > blockNumber)
 					blocks.put(child.getVertex(), blockNumber);
-			}
+			} else
+				blocks.put(child.getVertex(), blockNumber);
 			applyBlockNumber(child, blockNumber);
 		}
 	}

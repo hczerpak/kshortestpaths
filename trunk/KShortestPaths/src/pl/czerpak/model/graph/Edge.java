@@ -1,6 +1,6 @@
 package pl.czerpak.model.graph;
 
-public class Edge {
+public class Edge implements Cloneable {
 
 	private static long counter = 0;
 	
@@ -10,7 +10,7 @@ public class Edge {
 
 	private Double weight;
 	
-	private long id = counter++;
+	private long id;
 
 	public Edge(Vertex source, Vertex target, Double weight) {
 		if (weight < 0)
@@ -19,6 +19,12 @@ public class Edge {
 		this.source = source;
 		this.target = target;
 		this.weight = weight;
+		
+		this.id = counter++;
+	}
+	
+	private Edge(long id, Vertex source, Vertex target, Double weight) {
+		this(source, target, weight);
 	}
 	
 	/**
@@ -54,5 +60,9 @@ public class Edge {
 	
 	public long getId() {
 		return id;
+	}
+	
+	public Object clone() {
+		return new Edge(this.id, source, target, new Double(weight.doubleValue()));
 	}
 }

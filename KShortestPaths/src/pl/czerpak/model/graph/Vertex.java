@@ -5,7 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
-public class Vertex {
+public class Vertex implements Cloneable {
+	
 	private static int counter = 0;
 
 	private long id;
@@ -19,6 +20,11 @@ public class Vertex {
 	
 	public Vertex(String name) {
 		this.outgoingEdges = new ArrayList<Edge>();
+		id = counter++;
+	}
+	
+	private Vertex(long id) {
+		this.id = id;
 	}
 
 	public void remove(Edge edge) {
@@ -44,5 +50,14 @@ public class Vertex {
 
 	public long getId() {
 		return id;
+	}
+	
+	public Object clone() {
+		Vertex cloned = new Vertex(this.id);
+		
+		for (Edge e : outgoingEdges)
+			cloned.outgoingEdges.add(e);
+		
+		return cloned;
 	}
 }

@@ -34,6 +34,9 @@ public class Dijkstra {
 	public Dijkstra(DirectedGraph graph) {
 		this.graph = graph;
 		
+		if (graph.getVerticles().size() == 0)
+			throw new RuntimeException("Graph is empty");
+		
 		Heap<Vertex> q = new FastUpdateHeap<Vertex>();
 		Vertex v;
 		for (int i = 0; i < graph.getVerticles().size(); i++) {

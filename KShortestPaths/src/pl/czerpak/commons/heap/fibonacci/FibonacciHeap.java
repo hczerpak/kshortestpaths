@@ -142,7 +142,7 @@ public class FibonacciHeap<T> implements Heap<T> {
 	private T extractEntryFromForest(List<FibonacciHeapElement<T>> list, T entry) {
 		for (int i = 0; i < list.size(); i++) {
 			FibonacciHeapElement<T> element = list.get(i);
-			if (element.getValue() == entry) {
+			if (element.getValue().equals(entry)) {
 				list.remove(element);
 				size--;
 				return element.getValue();

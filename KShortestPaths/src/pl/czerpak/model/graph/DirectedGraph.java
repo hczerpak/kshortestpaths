@@ -8,7 +8,6 @@ import java.util.Map;
 public class DirectedGraph {
 
 	private List<Edge> edges;
-
 	private List<Vertex> verticles;
 
 	private Vertex target;
@@ -128,8 +127,10 @@ public class DirectedGraph {
 			edge.setSource(target);
 			edge.setTarget(source);
 			
-			source.getOutgoingEdges().remove(edge);
-			target.getOutgoingEdges().add(edge);
+			if (source != null)
+				source.getOutgoingEdges().remove(edge);
+			if (target != null)
+				target.getOutgoingEdges().add(edge);
 		}
 		temp = this.source;
 		this.source = this.target;

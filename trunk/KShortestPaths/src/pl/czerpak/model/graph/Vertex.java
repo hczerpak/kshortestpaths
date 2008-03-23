@@ -24,6 +24,7 @@ public class Vertex implements Cloneable {
 	}
 	
 	private Vertex(long id) {
+		outgoingEdges = new ArrayList<Edge>();
 		this.id = id;
 	}
 
@@ -60,4 +61,18 @@ public class Vertex implements Cloneable {
 		
 		return cloned;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		try {
+			Vertex objV = (Vertex)obj;
+			if (objV.id == id)
+				return true;
+		} catch (ClassCastException e) {
+			return false;
+		}
+		
+		return false;
+	}
+	
 }

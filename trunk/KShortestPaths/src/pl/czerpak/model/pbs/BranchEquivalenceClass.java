@@ -1,6 +1,9 @@
 package pl.czerpak.model.pbs;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import pl.czerpak.algorithm.replacement.CzerpakReplacement;
 import pl.czerpak.algorithm.replacement.Replacement;
@@ -127,16 +130,35 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 		/***********************************************************************
 		 * (...) subgraph H of G, defined by deleting from G all the vertices on
 		 * prefixPath(a), including a.
+		 * 
+		 * 
+		 * Note: remove all edges containing any of vertex being removed
 		 **********************************************************************/
+		Set<Vertex> removedVerticles = new HashSet<Vertex>();
 		Edge edge;
 		Path prefixA = parentBranch.getSource().prefixPath();
 		for (int i = 0; i < prefixA.getEdgesSequence().size(); i++) {
 			edge = prefixA.getEdgesSequence().get(i);
 			//graph.getEdges().remove(edge);
 			graph.remove(edge.getSource());
+			removedVerticles.add(edge.getSource());
 		}
 		/** ...including a * */
 		graph.remove(parentBranch.getSource().getVertex());
+		removedVerticles.add(parentBranch.getSource().getVertex());
+		
+		//remove not needed edges from graph and all refferences to them from verticles' outgoingEdges
+		List<Edge> edgesToRemove = new ArrayList<Edge>();
+		for (Edge e : graph.getEdges()) 
+			if (removedVerticles.contains(e.getSource()) || removedVerticles.contains(e.getTarget())) {
+				//mark edge to be removed from graph
+				edgesToRemove.add(e);
+				//remove edge from source vertex
+				e.getSource().getOutgoingEdges().remove(e);
+			}
+		//remove all marked edges from graph
+		graph.getEdges().removeAll(edgesToRemove);
+		
 		graph.setSource(parentBranch.getBranchPath().getLeadEdge().getTarget());
 		replacementBasePath = replacementBasePath.subPath(graph.getSource());
 		

@@ -22,10 +22,10 @@ import pl.czerpak.model.graph.Vertex;
  */
 public class Dijkstra {
 
-	// TODO: wywali� dist??
+	// TODO: wywalić dist??
 	private Map<String, Double> distances = new HashMap<String, Double>();
-
 	private Map<String, Vertex> previous = new HashMap<String, Vertex>();
+	private Map<Long, Vertex> longToVertex = new HashMap<Long, Vertex>();
 
 	private DirectedGraph graph;
 	
@@ -37,17 +37,18 @@ public class Dijkstra {
 		if (graph.getVerticles().size() == 0)
 			throw new RuntimeException("Graph is empty");
 		
-		Heap<Vertex> q = new FastUpdateHeap<Vertex>();
+		Heap<Long> q = new FastUpdateHeap<Long>();
 		Vertex v;
 		for (int i = 0; i < graph.getVerticles().size(); i++) {
 			v = graph.getVerticles().get(i);
-			q.put(v, Double.POSITIVE_INFINITY);
+			longToVertex.put(v.getId(), v); //trick tlumaczacy idiki na instancje węzłów bo poslugujemy sie idkami wezlow a nie instancjami, moze byc kilka instancji jednego wezla w trakcie obliczen i one wszystkie wskazuja ten sam wezel w oryginalnym grafie
+			q.put(v.getId(), Double.POSITIVE_INFINITY);
 			distances.put(v.getName(), Double.POSITIVE_INFINITY);
 			//previous.remove(v.getName());
 		}
 
 		distances.put(graph.getSource().getName(), 0.0);
-		q.update(graph.getSource(), 0.0);
+		q.update(graph.getSource().getId(), 0.0);
 
 		Vertex u;
 		Edge edge;
@@ -55,7 +56,7 @@ public class Dijkstra {
 		List<Vertex> s = new ArrayList<Vertex>();
 		// główna pętla tworząca mapę poprzedników węzłów
 		while (!q.isEmpty()) {
-			u = q.extractMinimumEntry();
+			u = longToVertex.get(q.extractMinimumEntry());
 
 			for (int i = 0; i < u.getOutgoingEdges().size(); i++) {
 				edge = u.getOutgoingEdges().get(i);
@@ -63,7 +64,7 @@ public class Dijkstra {
 				alt = distances.get(u.getName()) + edge.getWeight();
 				if (alt < distances.get(v.getName())) {
 					distances.put(v.getName(), alt);
-					q.update(v, alt);
+					q.update(v.getId(), alt);
 
 					previous.put(v.getName(), u);
 				}

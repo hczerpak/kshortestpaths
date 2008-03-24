@@ -85,7 +85,7 @@ public class Dijkstra {
 		// przeszukiwanie zbioru krawędzi w parencie w poszukiwaniu krawędzi
 		// łączącej parenta z targetem
 		for (int i = 0; i < outgoingEdges.size(); i++) {
-			if (outgoingEdges.get(i).getTarget() == target) {
+			if (outgoingEdges.get(i).getTarget().getName().equals(target.getName())) {
 				fromPreviousToTarget = outgoingEdges.get(i);
 				break;
 			}
@@ -96,7 +96,7 @@ public class Dijkstra {
 		edgesSequence = getEdgesSequenceFromRootToVertex(parent);
 
 		if (fromPreviousToTarget == null)
-			throw new NullPointerException("There should be an edge connecting " + graph.getSource().getName() + " and " + target.getName());
+			throw new NullPointerException("There should be pathe connecting " + graph.getSource().getName() + " and " + target.getName());
 
 		// dodaj znalezioną krawędź do listy
 		edgesSequence.add(fromPreviousToTarget);
@@ -108,9 +108,9 @@ public class Dijkstra {
 		if (shortestPath == null) {
 			shortestPath = new Path();
 			shortestPath.setEdgesSequence(getEdgesSequenceFromRootToVertex(graph.getTarget()));
-			shortestPath.setWeight(distances.get(graph.getTarget().getName()));
 			shortestPath.setSource(graph.getSource());
 			shortestPath.setTarget(graph.getTarget());
+			shortestPath.recalculateWeight();
 		}
 		return shortestPath;
 	}

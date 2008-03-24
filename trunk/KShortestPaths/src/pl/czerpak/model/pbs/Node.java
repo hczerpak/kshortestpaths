@@ -52,10 +52,10 @@ public class Node {
 	}
 
 	/**
-	 * Zwraca kolekcjê wszyskich "lead edges" wychodz¹cych z wierzcho³ka
-	 * _vertex. Lead edge do krawêdŸ, która wychodzi z wierzcho³ka i rozpoczyna
-	 * jak¹œ "najkrótsz¹ œcie¿kê". Krawêdzi mo¿e wychodziæ bardzo du¿o, ale nie
-	 * wszystkie musz¹ rozpoczynaæ najkrótsze œcie¿ki.
+	 * Zwraca kolekcjÄ™ wszyskich "lead edges" wychodzÄ…cych z wierzchoÅ‚ka
+	 * _vertex. Lead edge do krawÄ™dÅº, ktÃ³ra wychodzi z wierzchoÅ‚ka i rozpoczyna
+	 * jakÄ…Å› "najkrÃ³tszÅ¼ Å›cieÅ¼kÄ™". KrawÄ™dzi moÅ¼e wychodziÄ‡ bardzo duÅ¼o, ale nie
+	 * wszystkie muszÄ… rozpoczynaÄ‡ najkrÃ³tsze Å›cieÅ¼ki.
 	 * 
 	 * @return
 	 * 
@@ -70,7 +70,7 @@ public class Node {
 	}
 
 	/**
-	 * Zwraca prefixPath powi¹zan¹ z wêz³em u.
+	 * Zwraca prefixPath powiï¿½zanï¿½ z wï¿½zï¿½em u.
 	 * 
 	 * @return
 	 * 
@@ -80,7 +80,6 @@ public class Node {
 			Path emptyPath = new Path();
 			emptyPath.setSource(this.vertex);
 			emptyPath.setTarget(this.vertex);
-			emptyPath.setWeight(new Double(0.0));
 
 			return emptyPath;
 		}

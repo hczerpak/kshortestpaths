@@ -47,10 +47,6 @@ public class Path {
 	public Double getWeight() {
 		return weight;
 	}
-
-	public void setWeight(Double weight) {
-		this.weight = weight;
-	}
 	
 	/**
 	 * @return length of edgeSequence list
@@ -94,11 +90,12 @@ public class Path {
 		Path cloned = new Path();
 		cloned.source = source;
 		cloned.target = target;
-		cloned.weight = weight;
 		cloned.parentEquivalenceClass = parentEquivalenceClass;
 		for (int i = 0; i < edgesSequence.size(); i++)
 			cloned.edgesSequence.add(edgesSequence.get(i));
 
+		cloned.recalculateWeight();
+		
 		return cloned;
 	}
 
@@ -205,6 +202,8 @@ public class Path {
 	 * 
 	 */
 	public Path concat(Path path) {
+		if (path == null) return this;
+		
 		Path concatenation = new Path();
 
 		concatenation.source = this.source;
@@ -212,13 +211,9 @@ public class Path {
 		concatenation.parentEquivalenceClass = this.parentEquivalenceClass;
 		concatenation.weight = this.weight + path.weight;
 
-		for (int i = 0; i < edgesSequence.size(); i++)
-			concatenation.edgesSequence.add(edgesSequence.get(i));
-
-		if (path != null)
-			for (int i = 0; i < path.edgesSequence.size(); i++)
-				concatenation.edgesSequence.add(path.edgesSequence.get(i));
-
+		concatenation.edgesSequence.addAll(edgesSequence);
+		concatenation.edgesSequence.addAll(path.edgesSequence);
+		
 		return concatenation;
 	}
 }

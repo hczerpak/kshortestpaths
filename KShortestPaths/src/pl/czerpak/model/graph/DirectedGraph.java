@@ -9,9 +9,8 @@ public class DirectedGraph {
 
 	private List<Edge> edges;
 	private List<Vertex> verticles;
-
+	
 	private Vertex target;
-
 	private Vertex source;
 
 	public DirectedGraph() {
@@ -80,22 +79,22 @@ public class DirectedGraph {
 
 	public DirectedGraph clone() {
 		DirectedGraph cloned = new DirectedGraph();
-		Map<Vertex, Vertex> originalToClonedVertex = new HashMap<Vertex, Vertex>();
-		Map<Edge, Edge> originalToClonedEdge = new HashMap<Edge, Edge>();
+		Map<String, Vertex> originalToClonedVertex = new HashMap<String, Vertex>();
+		Map<Long, Edge> originalToClonedEdge = new HashMap<Long, Edge>();
 		
 		//clone verticles
 		for (Vertex original : verticles)
-			originalToClonedVertex.put(original, (Vertex)original.clone());
+			originalToClonedVertex.put(original.getName(), (Vertex)original.clone());
 		
 		//clone edges
 		for (Edge original : edges)
-			originalToClonedEdge.put(original, (Edge)original.clone());
+			originalToClonedEdge.put(original.getId(), (Edge)original.clone());
 
 		//correct refferences to cloned edges
 		for (Vertex clonedV : originalToClonedVertex.values()) {
 			List<Edge> clonedOutgoingEdges = new ArrayList<Edge>();
 			for (Edge e : clonedV.getOutgoingEdges())
-				clonedOutgoingEdges.add(originalToClonedEdge.get(e));
+				clonedOutgoingEdges.add(originalToClonedEdge.get(e.getId()));
 			clonedV.setOutgoingEdges(clonedOutgoingEdges);
 			
 			cloned.verticles.add(clonedV);
@@ -103,14 +102,14 @@ public class DirectedGraph {
 
 		//correct refferences to cloned verticles
 		for (Edge clonedE : originalToClonedEdge.values()) {
-			clonedE.setSource(originalToClonedVertex.get(clonedE.getSource()));
-			clonedE.setTarget(originalToClonedVertex.get(clonedE.getTarget()));
+			clonedE.setSource(originalToClonedVertex.get(clonedE.getSource().getName()));
+			clonedE.setTarget(originalToClonedVertex.get(clonedE.getTarget().getName()));
 			
 			cloned.edges.add(clonedE);
 		}
 		
-		cloned.source = originalToClonedVertex.get(source);
-		cloned.target = originalToClonedVertex.get(target);
+		cloned.source = originalToClonedVertex.get(source.getName());
+		cloned.target = originalToClonedVertex.get(target.getName());
 
 		return cloned;
 	}

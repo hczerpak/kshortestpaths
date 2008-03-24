@@ -41,6 +41,7 @@ public class ReplacementTestCase extends TestCase {
 				ti.getBranches().iterator().next());
 		
 		Path shortestPath = eq2.getShortestPath();
+		eq2.modifyPathBranchingStructure(ti);
 		
 		List<Edge> edges = shortestPath.getEdgesSequence();
 		

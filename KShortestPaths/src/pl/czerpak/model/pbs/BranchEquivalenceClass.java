@@ -15,7 +15,7 @@ import pl.czerpak.model.graph.Vertex;
 public class BranchEquivalenceClass extends EquivalenceClass {
 
 	private Branch parentBranch;
-	private Path shortestPath = null;
+	private Path replacement = null;
 
 	private Path replacementBasePath;
 
@@ -27,7 +27,7 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 
 	@Override
 	public void modifyPathBranchingStructure(PathBranchingStructure pbs) {
-		if (shortestPath == null) getShortestPath();
+		if (replacement == null) getShortestPath();
 		/**
 		 * (a) Let w be the vertex where P branches off from branchPath(u, v)*
 		 */
@@ -38,12 +38,12 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 		Path pathWTp = new Path();
 		Path branchPath = parentBranch.getBranchPath();
 
-		// przygl�damy si� kolejnym elementom P i branchPath do momentu
-		// kiedy P p�jdzie
-		// w inn� stron�, od razu tworz�c �cie�ki potrzebne w nast�pnym
+		// przyglądamy się kolejnym elementom P i branchPath do momentu
+		// kiedy P pójdzie
+		// w inną stronę, od razu tworząc ścieżki potrzebne w następnym
 		// kroku
 		for (int j = 0; j < branchPath.getEdgesSequence().size() - 1; j++) {
-			Edge edgeFromP = shortestPath.getEdgesSequence().get(j);
+			Edge edgeFromP = replacement.getEdgesSequence().get(j);
 			Edge edgeFromBranchPath = branchPath.getEdgesSequence().get(j + 1);
 
 			if (edgeFromP != edgeFromBranchPath)
@@ -125,58 +125,59 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 
 	@Override
 	public Path getShortestPath() {
-		if (shortestPath != null) return shortestPath;
-		
-		/***********************************************************************
-		 * (...) subgraph H of G, defined by deleting from G all the vertices on
-		 * prefixPath(a), including a.
-		 * 
-		 * 
-		 * Note: remove all edges containing any of vertex being removed
-		 **********************************************************************/
-		Set<Vertex> removedVerticles = new HashSet<Vertex>();
-		Edge edge;
-		Path prefixA = parentBranch.getSource().prefixPath();
-		for (int i = 0; i < prefixA.getEdgesSequence().size(); i++) {
-			edge = prefixA.getEdgesSequence().get(i);
-			//graph.getEdges().remove(edge);
-			graph.remove(edge.getSource());
-			removedVerticles.add(edge.getSource());
-		}
-		/** ...including a * */
-		graph.remove(parentBranch.getSource().getVertex());
-		removedVerticles.add(parentBranch.getSource().getVertex());
-		
-		//remove not needed edges from graph and all refferences to them from verticles' outgoingEdges
-		List<Edge> edgesToRemove = new ArrayList<Edge>();
-		for (Edge e : graph.getEdges()) 
-			if (removedVerticles.contains(e.getSource()) || removedVerticles.contains(e.getTarget())) {
-				//mark edge to be removed from graph
-				edgesToRemove.add(e);
-				//remove edge from source vertex
-				e.getSource().getOutgoingEdges().remove(e);
+		if (replacement == null) {
+			/***********************************************************************
+			 * (...) subgraph H of G, defined by deleting from G all the vertices on
+			 * prefixPath(a), including a.
+			 * 
+			 * 
+			 * Note: remove all edges containing any of vertex being removed
+			 **********************************************************************/
+			Set<String> removedVerticles = new HashSet<String>();
+			Edge edge;
+			Path prefixPath = parentBranch.getSource().prefixPath();
+			for (int i = 0; i < prefixPath.getEdgesSequence().size(); i++) {
+				edge = prefixPath.getEdgesSequence().get(i);
+				graph.remove(edge.getSource());
+				removedVerticles.add(edge.getSource().getName());
 			}
-		//remove all marked edges from graph
-		graph.getEdges().removeAll(edgesToRemove);
-		
-		graph.setSource(parentBranch.getBranchPath().getLeadEdge().getTarget());
-		replacementBasePath = replacementBasePath.subPath(graph.getSource());
-		
-		Path replacement = null;
-		switch (algorithmType) {
-			case ALGORITHM_TYPE_REPLACEMENT :
-				replacement = new Replacement(graph, replacementBasePath).getReplacement();
-				break;
-			case ALGORITHM_TYPE_CZERPAK :
-				replacement = new CzerpakReplacement(graph, replacementBasePath).getReplacement();
-				break;
+			/** ...including a * */
+			graph.remove(parentBranch.getSource().getVertex());
+			removedVerticles.add(parentBranch.getSource().getVertex().getName());
+			
+			//remove not needed edges from graph and all refferences to them from verticles' outgoingEdges
+			List<Edge> edgesToRemove = new ArrayList<Edge>();
+			for (Edge e : graph.getEdges()) 
+				if (removedVerticles.contains(e.getSource().getName()) 
+						|| removedVerticles.contains(e.getTarget().getName())) {
+					//mark edge to be removed from graph
+					edgesToRemove.add(e);
+					//remove edge from source vertex
+					e.getSource().getOutgoingEdges().remove(e);
+				}
+			//remove all marked edges from graph
+			graph.getEdges().removeAll(edgesToRemove);
+			
+			graph.setSource(parentBranch.getBranchPath().getLeadEdge().getTarget());
+			replacementBasePath = replacementBasePath.subPath(graph.getSource());
+			
+			switch (algorithmType) {
+				case ALGORITHM_TYPE_REPLACEMENT :
+					replacement = new Replacement(graph, replacementBasePath).getReplacement();
+					break;
+				case ALGORITHM_TYPE_CZERPAK :
+					replacement = new CzerpakReplacement(graph, replacementBasePath).getReplacement();
+					break;
+			}
+	
+			if (replacement != null)
+				replacement.setParentEquivalenceClass(this);
+			
+			replacement.getEdgesSequence().add(0, parentBranch.getBranchPath().getLeadEdge());
+			replacement.recalculateWeight();
+			
 		}
-
-		if (replacement != null)
-			replacement.setParentEquivalenceClass(this);
-
-		shortestPath = replacement;
 		
-		return replacement;
+		return parentBranch.getSource().prefixPath().concat(replacement);
 	}
 }

@@ -33,7 +33,7 @@ public class Replacement {
 		 * nodes, and let y be a shortest path tree from all the nodes to the
 		 * target
 		 **********************************************************************/
-		ShortestPathTree spiderX = new ShortestPathTree(new Dijkstra(graph));
+		ShortestPathTree spiderX = new ShortestPathTree(new Dijkstra(graph.clone()));
 		Sink sinkY = new Sink(new Dijkstra(graph.clone().reverseEdges()));
 
 		Heap<Path> heap = new FibonacciHeap<Path>();
@@ -57,7 +57,7 @@ public class Replacement {
 			
 			// remove from Ei edges with target set to a
 			for (Edge edge : setEi) {
-				if (edge.getTarget() == cutEdge.getSource())
+				if (edge.getTarget().getName().equals(cutEdge.getSource().getName()))
 					setEi.remove(edge);
 			}
 

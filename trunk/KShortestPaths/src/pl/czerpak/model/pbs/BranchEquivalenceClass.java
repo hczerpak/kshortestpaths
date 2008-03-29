@@ -178,6 +178,9 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 			
 		}
 		
-		return parentBranch.getSource().prefixPath().concat(replacement);
+		Path result = parentBranch.getSource().prefixPath().concat(replacement);
+		result.recalculateWeight();
+		
+		return result;
 	}
 }

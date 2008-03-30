@@ -35,11 +35,11 @@ public class BranchEquivalenceClassTestCase extends TestCase {
 		
 		assertEquals(g.getVerticles().get(0).getName(), edges.get(0).getSource().getName());
 		assertEquals(g.getVerticles().get(2).getName(), edges.get(1).getTarget().getName());
-		assertEquals(4, edges.size());
-		assertEquals(4., edges.get(0).getWeight());
-		assertEquals(11., edges.get(1).getWeight());
+		assertEquals(5, edges.size());
+		assertEquals(1., edges.get(0).getWeight());
+		assertEquals(4., edges.get(1).getWeight());
 		
-		assertEquals(40., shortestPath.getWeight());
+		assertEquals(45., shortestPath.getWeight());
 	}
 
 	public void testModifyPathBranchingStructure() {

@@ -65,7 +65,7 @@ public class Hershberger {
 			 */
 			Path p = heap.extractMinimumEntry();
 
-			// je�li zabrak�o �cie�ek
+			// jeśli zabrakło ścieżek
 			if (p == null) {
 				System.out.println("Not enough paths in graph.\n");
 				break;

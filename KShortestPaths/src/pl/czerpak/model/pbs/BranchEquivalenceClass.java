@@ -42,9 +42,9 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 		// kiedy P pójdzie
 		// w inną stronę, od razu tworząc ścieżki potrzebne w następnym
 		// kroku
-		for (int j = 0; j < branchPath.getEdgesSequence().size() - 1; j++) {
+		for (int j = 0; j < branchPath.getEdgesSequence().size(); j++) {
 			Edge edgeFromP = replacement.getEdgesSequence().get(j);
-			Edge edgeFromBranchPath = branchPath.getEdgesSequence().get(j + 1);
+			Edge edgeFromBranchPath = branchPath.getEdgesSequence().get(j);
 
 			if (edgeFromP != edgeFromBranchPath)
 				w = edgeFromP.getSource();

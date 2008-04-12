@@ -65,4 +65,13 @@ public class Edge implements Cloneable {
 	public Object clone() {
 		return new Edge(this.id, source, target, new Double(weight.doubleValue()));
 	}
+
+	@Override
+	public String toString() {
+		return "Edge (id:" + id + ") | weight: " + weight + 
+		" \nSource: " + source.toString() +
+		" \nTarget: " + target.toString();
+	}
+	
+	
 }

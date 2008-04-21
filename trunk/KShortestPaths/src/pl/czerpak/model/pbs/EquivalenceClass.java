@@ -33,4 +33,6 @@ public abstract class EquivalenceClass {
 	public abstract Path getShortestPath();
 	
 	public abstract void modifyPathBranchingStructure(PathBranchingStructure pbs);
+	
+	public abstract boolean hasNextPath();
 }

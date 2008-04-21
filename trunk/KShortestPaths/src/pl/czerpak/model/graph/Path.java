@@ -1,24 +1,40 @@
 package pl.czerpak.model.graph;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pl.czerpak.model.pbs.EquivalenceClass;
 
+/**
+ * Klasa reprezentuje ścieżkę w grafie. Najważniejszą częścią jest sekwencja (lista)
+ * krawędzi, z których jest złożona ścieżka. Dodatkowa zawiera takie parametry jak
+ * wierzchołek początkowy, końcowy, waga ścieżki (suma wag krawędzi).
+ * 
+ * Zawiera też referencję do nadrzędnej klasy przynależności (EquivalenceClass). Normalnie
+ * parametr ten jest nie używany.
+ * 
+ * @author HCzerpak
+ *
+ */
 public class Path {
 
-	private static int counter = 0;
+	/**
+	 * licznik do tworzenia identyfikatorów
+	 */
+	private static long counter = 0L;
 
 	private Vertex source;
 	private Vertex target;
 	private Double weight = Double.POSITIVE_INFINITY;
-	private String name;
+	private long id;
 	private List<Edge> edgesSequence;
 	private EquivalenceClass parentEquivalenceClass;
 
 	public Path() {
 		edgesSequence = new ArrayList<Edge>();
-		name = "Path" + counter++;
+		id = counter++;
 	}
 
 	public Path(List<Edge> edgesSequence, Vertex source, Vertex target) {
@@ -27,7 +43,16 @@ public class Path {
 		this.edgesSequence = edgesSequence;
 		recalculateWeight();
 	}
-
+	
+	public void add(Edge e) {
+		if (e != null) {
+			if (source == null) source = e.getSource();
+			target = e.getTarget();
+			
+			edgesSequence.add(e);
+		}
+	}
+	
 	public Vertex getSource() {
 		return source;
 	}
@@ -71,10 +96,6 @@ public class Path {
 		this.parentEquivalenceClass = parentEquivalenceClass;
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public Edge getLeadEdge() {
 		if (edgesSequence.size() > 0)
 			return edgesSequence.get(0);
@@ -83,7 +104,7 @@ public class Path {
 	}
 
 	public String toString() {
-		return name + " | source: " + source.getName() + " target: " + target.getName();
+		return "Path" + id + " | source: " + source.getName() + " target: " + target.getName();
 	}
 
 	public Path clone() {
@@ -125,8 +146,8 @@ public class Path {
 		while (edgesSequence.get(startIndex) != startEdge && startIndex < edgesSequence.size() - 1)
 			startIndex++;
 
-		// je�li si� sko�czy�a �cie�ka i nie ma ko�cowej to b��dne parametry i
-		// zwraca b��d
+		// jeśli się skończyła ścieżka i nie ma końcowej to błędne parametry i
+		// zwraca błąd
 		if (startIndex == edgesSequence.size())
 			throw new IllegalArgumentException("No starting edge");
 
@@ -134,20 +155,19 @@ public class Path {
 	}
 
 	/**
-	 * Buduje pod�cie�k� zaczynaj�c od podanego wierzcho�ka
+	 * Buduje podścieżkę zaczynając od podanego wierzchołka
 	 * 
 	 * @param startingVertex
 	 * @return
 	 * 
 	 */
 	public Path subPath(Vertex startingVertex) {
-		int i = 0;
+		
+		for (int i = 0; i < edgesSequence.size(); i++)
+			if (edgesSequence.get(i).getSource().getId() == startingVertex.getId())
+				return subPath(i);
 
-		for (; i < edgesSequence.size(); i++)
-			if (edgesSequence.get(i).getSource() == startingVertex)
-				break;
-
-		return subPath(i);
+		return subPath(0);
 	}
 
 	/**
@@ -169,7 +189,7 @@ public class Path {
 
 		// copy references to new edge sequence
 		for (int i = startIndex; i < endIndex + 1; i++)
-			subp.edgesSequence.add(edgesSequence.get(i));
+			subp.add(edgesSequence.get(i));
 		
 		//set source and target
 		if (subp.edgesSequence.size() > 0) {
@@ -215,5 +235,36 @@ public class Path {
 		concatenation.edgesSequence.addAll(path.edgesSequence);
 		
 		return concatenation;
+	}
+
+	/**
+	 * Funkcja przeznaczona do tłumaczenia ścieżek zbudowanych z krawędzi
+	 * i wierzchołków grafu o poodwracanych kierunkach krawędzi. Klonowanie
+	 * takiej ścieżki nigdy nie da prawidłowych rezultatów więc zostaje ona
+	 * przetlumaczona na obiekty z grafu użytego do konstrukcji roboczego
+	 * grafu z przerobionymi krawędziami.
+	 * @return
+	 */
+	public Path translate(DirectedGraph dictionary) {
+		Path translated = new Path();
+		
+		translated.parentEquivalenceClass = parentEquivalenceClass;
+		translated.weight = weight;
+		
+		Map<Long, Edge> edgeMap = new HashMap<Long, Edge>();
+		for (Edge e : dictionary.getEdges())
+			edgeMap.put(e.getId(), e);
+		
+		Map<Long, Vertex> vertexMap = new HashMap<Long, Vertex>();
+		for (Vertex v : dictionary.getVerticles())
+			vertexMap.put(v.getId(), v);
+
+		for (Edge e : edgesSequence)
+			translated.add(edgeMap.get(e.getId()));
+		
+		translated.source = vertexMap.get(source.getId());
+		translated.target = vertexMap.get(target.getId());
+		
+		return translated;
 	}
 }

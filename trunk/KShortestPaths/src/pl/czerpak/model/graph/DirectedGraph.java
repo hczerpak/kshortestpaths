@@ -52,15 +52,18 @@ public class DirectedGraph {
 
 	public void remove(Vertex vertex) {
 		verticles.remove(vertex);
+		edges.removeAll(vertex.getOutgoingEdges());
 		
-		for (Edge e : vertex.getOutgoingEdges())
-			remove(e);
-
 		vertex.getOutgoingEdges().clear();
 		
+		
+		List<Edge> toRemove = new ArrayList<Edge>();
 		for (Edge e : edges)
-			if (e.getTarget().getId() == vertex.getId())
-				remove(e);
+			if (e.getTarget().getId() == vertex.getId()) {
+				e.getSource().getOutgoingEdges().remove(e);
+				toRemove.add(e);
+			}
+		edges.remove(toRemove);
 	}
 	
 	public void remove(Edge edge) {

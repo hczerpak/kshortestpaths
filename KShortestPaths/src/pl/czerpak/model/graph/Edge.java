@@ -25,6 +25,7 @@ public class Edge implements Cloneable {
 	
 	private Edge(long id, Vertex source, Vertex target, Double weight) {
 		this(source, target, weight);
+		this.id = id;
 	}
 	
 	/**
@@ -71,6 +72,35 @@ public class Edge implements Cloneable {
 		return "Edge (id:" + id + ") | weight: " + weight + 
 		" \nSource: " + source.toString() +
 		" \nTarget: " + target.toString();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final Edge other = (Edge) obj;
+		if (id != other.id)
+			return false;
+		if (source == null) {
+			if (other.source != null)
+				return false;
+		} else if (!source.equals(other.source))
+			return false;
+		if (target == null) {
+			if (other.target != null)
+				return false;
+		} else if (!target.equals(other.target))
+			return false;
+		if (weight == null) {
+			if (other.weight != null)
+				return false;
+		} else if (!weight.equals(other.weight))
+			return false;
+		return true;
 	}
 	
 	

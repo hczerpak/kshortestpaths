@@ -44,7 +44,6 @@ public class Dijkstra {
 			longToVertex.put(v.getId(), v); //trick tlumaczacy idiki na instancje węzłów bo poslugujemy sie idkami wezlow a nie instancjami, moze byc kilka instancji jednego wezla w trakcie obliczen i one wszystkie wskazuja ten sam wezel w oryginalnym grafie
 			q.put(v.getId(), Double.POSITIVE_INFINITY);
 			distances.put(v.getName(), Double.POSITIVE_INFINITY);
-			//previous.remove(v.getName());
 		}
 
 		distances.put(graph.getSource().getName(), 0.0);
@@ -69,7 +68,6 @@ public class Dijkstra {
 					previous.put(v.getName(), u);
 				}
 			}
-
 			s.add(u);
 		}
 	}
@@ -85,15 +83,13 @@ public class Dijkstra {
 		// przeszukiwanie zbioru krawędzi w parencie w poszukiwaniu krawędzi
 		// łączącej parenta z targetem
 		for (int i = 0; i < outgoingEdges.size(); i++) {
-			if (outgoingEdges.get(i).getTarget().getName().equals(target.getName())) {
+			if (outgoingEdges.get(i).getTarget().getId() == target.getId()) {
 				fromPreviousToTarget = outgoingEdges.get(i);
 				break;
 			}
 		}
 
-		List<Edge> edgesSequence;
-
-		edgesSequence = getEdgesSequenceFromRootToVertex(parent);
+		List<Edge> edgesSequence = getEdgesSequenceFromRootToVertex(parent);
 
 		if (fromPreviousToTarget == null)
 			throw new NullPointerException("There should be pathe connecting " + graph.getSource().getName() + " and " + target.getName());

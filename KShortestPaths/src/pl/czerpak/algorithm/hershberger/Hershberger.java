@@ -91,8 +91,10 @@ public class Hershberger {
 			 * Insert these paths into the heap.
 			 ******************************************************************/
 			for (int j = 0; j < changedOrCreatedClasses.size(); j++) {
-				shortest = changedOrCreatedClasses.get(j).getShortestPath();
-				heap.put(shortest, shortest.getWeight());
+				if (changedOrCreatedClasses.get(j).hasNextPath()) {
+					shortest = changedOrCreatedClasses.get(j).getShortestPath();
+					heap.put(shortest, shortest.getWeight());
+				}
 			}
 			changedOrCreatedClasses.clear();
 		}

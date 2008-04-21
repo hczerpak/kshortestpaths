@@ -36,7 +36,7 @@ public class HershbergerTestCase extends TestCase {
 		
 		path = results.get(1);
 		
-		assertEquals(30., path.getWeight());
+		assertEquals(45., path.getWeight());
 		
 		assertEquals(5, path.getEdgesSequence().size());
 		
@@ -48,7 +48,9 @@ public class HershbergerTestCase extends TestCase {
 		assertEquals(14., path.getEdgesSequence().get(3).getWeight());
 		assertEquals(15., path.getEdgesSequence().get(4).getWeight());
 		
-		assertEquals(3, path.getEdgesSequence().size());
+		assertEquals(5, path.getEdgesSequence().size());
+		
+		System.out.println("All ok!");
 	}
 
 }

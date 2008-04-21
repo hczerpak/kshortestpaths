@@ -96,7 +96,7 @@ public class Sink extends SPT_Base {
 	public boolean isValid(Edge e, int i) {
 		int lowb = minblocks.get(e.getTarget().getName());
 
-		if (e.getTarget() != null && lowb > i)
+		if (lowb > i)
 			return true;
 
 		return false;

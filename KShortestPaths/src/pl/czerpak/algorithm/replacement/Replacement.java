@@ -44,7 +44,12 @@ public class Replacement {
 		Set<Edge> setEi = new HashSet<Edge>();
 
 		for (int i = 0; i < basePath.getEdgesSequence().size(); i++) {
-			Edge cutEdge = basePath.getEdgesSequence().get(i);
+			Edge cutEdge = translateEdge(
+				basePath.getEdgesSequence().get(i));
+			
+			//jeśli krawędź jest nieprzetłumaczalna tzn. że nie ma jej w  bieżącym grafie
+			if (cutEdge == null) continue;
+			
 			/**
 			 * (a) Let Xi = X \ ei. Let Ei be the set of all edges (a, b) in
 			 * E\ei such that a and b are in different components of Xi, with a
@@ -52,7 +57,7 @@ public class Replacement {
 			 */
 			// add to Ei edges with source set to a
 			for (Edge edge : cutEdge.getSource().getOutgoingEdges()) 
-				setEi.add(edge);
+				setEi.add(translateEdge(edge));
 			setEi.remove(cutEdge);
 			
 			// remove from Ei edges with target set to a
@@ -82,7 +87,7 @@ public class Replacement {
 
 					path = new Path(spiderX.getPathTo(edge.getSource()).getEdgesSequence(), graph.getSource(), graph.getTarget());
 					path.getEdgesSequence().add(edge);
-					Path pathToSink = sinkY.getPathFrom(edge.getTarget());
+					Path pathToSink = sinkY.getPathFrom(edge.getTarget()).translate(graph);
 					path.getEdgesSequence().addAll(pathToSink.getEdgesSequence());
 				} else {
 					DirectedGraph g = graph.clone();
@@ -100,5 +105,22 @@ public class Replacement {
 
 	public Path getReplacement() {
 		return bestReplacement;
+	}
+	
+	/** Krawedz z trzeba przetłumaczyć na krawedź z bieżącego podgrafu
+	 * ponieważ inne krawędzie i wierzchołkie bazowego grafu,
+	 * z którego zostały pousuwane wierzchołki i krawędzie mogą nie istnieć w bieżącym
+	 * grafie używanym do obliczeń. Bez przetłumaczenia krawędzi zdarza się,
+	 * że algorytm sprawdza ścieżkę, która już została wcześniej wyliczona i 
+	 * napotyka na wierzchołki, których w bieżącym grafie nie ma w ogóle.
+	 * 
+	 * Jeśli krawędź jest nieprzetłumaczalna tzn. że nie ma jej w  bieżącym grafie.
+	*/
+	private Edge translateEdge(Edge e) {
+		for (Edge ee : graph.getEdges())
+			if (ee.getId() == e.getId()) 
+				return ee;
+		
+		return null;
 	}
 }

@@ -20,7 +20,7 @@ public class NodeEquivalenceClass extends EquivalenceClass {
 
 	@Override
 	public void modifyPathBranchingStructure(PathBranchingStructure ti) {
-		if (shortestPath == null) getShortestPath();
+		if (shortestPath == null) throw new RuntimeException("Create shortest path first. This way shortest path will be lost");
 		
 		/**
 		 * (a) Add a new branch (u, tp) to T that represents the suffix of P
@@ -54,11 +54,19 @@ public class NodeEquivalenceClass extends EquivalenceClass {
 
 		newClasses = new ArrayList<EquivalenceClass>();
 		newClasses.add(newEqClass);
+		
+		shortestPath =  null;
 	}
 
 	@Override
 	public Path getShortestPath() {
-		if (shortestPath != null) return shortestPath;
+		if (shortestPath == null) computeShortestPath();
+		
+		return shortestPath;
+	}
+	
+	private void computeShortestPath() {
+		if (shortestPath != null) return;
 		
 		Edge edge;
 		/***********************************************************************
@@ -84,8 +92,18 @@ public class NodeEquivalenceClass extends EquivalenceClass {
 		 * prefixPath(w)
 		 **********************************************************************/
 		Dijkstra d = new Dijkstra(graph);
-		d.getShortestPath().setParentEquivalenceClass(this);
 		shortestPath = d.getShortestPath();
-		return d.getShortestPath();
+		
+		if (shortestPath != null)
+			shortestPath.setParentEquivalenceClass(this);
+	}
+
+	@Override
+	public boolean hasNextPath() {
+		
+		computeShortestPath();
+		
+		if (shortestPath != null) return true;
+		else return false;
 	}
 }

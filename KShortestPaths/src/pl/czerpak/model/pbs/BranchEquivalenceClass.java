@@ -18,6 +18,8 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 	private Path replacement = null;
 
 	private Path replacementBasePath;
+	
+	private PathBranchingStructure modified = null;
 
 	public BranchEquivalenceClass(AlgorithmType algorithmType, DirectedGraph subgraph, Path replacementBasePath, Branch parentBranch) {
 		super(algorithmType, subgraph);
@@ -27,6 +29,14 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 
 	@Override
 	public void modifyPathBranchingStructure(PathBranchingStructure pbs) {
+		
+		/**
+		 * jeśli już raz była modyfikowana struktura PBS nie można tego zrobić
+		 * ponownie przy użyciu tej samej EQ
+		 */
+		if (modified == null) modified = pbs;
+		else return;
+		
 		if (replacement == null) getShortestPath();
 		/**
 		 * (a) Let w be the vertex where P branches off from branchPath(u, v)*
@@ -38,22 +48,32 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 		Path pathWTp = new Path();
 		Path branchPath = parentBranch.getBranchPath();
 
-		// przyglądamy się kolejnym elementom P i branchPath do momentu
-		// kiedy P pójdzie
-		// w inną stronę, od razu tworząc ścieżki potrzebne w następnym
-		// kroku
-		for (int j = 0; j < branchPath.getEdgesSequence().size(); j++) {
-			Edge edgeFromP = replacement.getEdgesSequence().get(j);
-			Edge edgeFromBranchPath = branchPath.getEdgesSequence().get(j);
+		/** przyglądamy się kolejnym elementom P i branchPath do momentu 
+		 * kiedy P pójdzie w inną stronę, od razu tworząc ścieżki 
+		 * potrzebne w następnym kroku.
+		 * 
+		 * Kopiujemy sekwencje krawędzi aż skończy się ścieżka replacement
+		 * 
+		 */
+		Edge edgeFromP, edgeFromBranchPath;
+		for (int j = 0; j < branchPath.getEdgesSequence().size() || j < replacement.getEdgesSequence().size(); j++) {
+			
+			edgeFromP = j < replacement.getEdgesSequence().size() ? replacement.getEdgesSequence().get(j) : null;
+			edgeFromBranchPath = j < branchPath.getEdgesSequence().size() ? branchPath.getEdgesSequence().get(j) : null;
 
-			if (edgeFromP != edgeFromBranchPath)
+			/**
+			 * szukanie W stogu siana, po znalezieniu mamy punkt podziału
+			 */
+			if (edgeFromP != null && edgeFromBranchPath != null && edgeFromP.getId() != edgeFromBranchPath.getId() && w == null)
 				w = edgeFromP.getSource();
 
 			if (w == null)
-				pathUW.getEdgesSequence().add(edgeFromBranchPath);
+				pathUW.add(edgeFromBranchPath);
 			else {
-				pathWV.getEdgesSequence().add(edgeFromBranchPath);
-				pathWTp.getEdgesSequence().add(edgeFromP);
+				if (edgeFromBranchPath != null)
+					pathWV.add(edgeFromBranchPath);
+				if (edgeFromP != null)
+					pathWTp.add(edgeFromP);
 			}
 		}
 		if (w == null) {
@@ -123,64 +143,75 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 
 	}
 
-	@Override
-	public Path getShortestPath() {
-		if (replacement == null) {
-			/***********************************************************************
-			 * (...) subgraph H of G, defined by deleting from G all the vertices on
-			 * prefixPath(a), including a.
-			 * 
-			 * 
-			 * Note: remove all edges containing any of vertex being removed
-			 **********************************************************************/
-			Set<String> removedVerticles = new HashSet<String>();
-			Edge edge;
-			Path prefixPath = parentBranch.getSource().prefixPath();
-			for (int i = 0; i < prefixPath.getEdgesSequence().size(); i++) {
-				edge = prefixPath.getEdgesSequence().get(i);
-				graph.remove(edge.getSource());
-				removedVerticles.add(edge.getSource().getName());
+	private void computeShortestPath() {
+		if (replacement != null) return;
+		
+		/***********************************************************************
+		 * (...) subgraph H of G, defined by deleting from G all the vertices on
+		 * prefixPath(a), including a.
+		 * 
+		 * 
+		 * Note: remove all edges containing any of vertex being removed
+		 **********************************************************************/
+		Set<String> removedVerticles = new HashSet<String>();
+		Edge edge;
+		Path prefixPath = parentBranch.getSource().prefixPath();
+		for (int i = 0; i < prefixPath.getEdgesSequence().size(); i++) {
+			edge = prefixPath.getEdgesSequence().get(i);
+			graph.remove(edge.getSource());
+			removedVerticles.add(edge.getSource().getName());
+		}
+		/** ...including a * */
+		graph.remove(parentBranch.getSource().getVertex());
+		removedVerticles.add(parentBranch.getSource().getVertex().getName());
+		
+		//remove not needed edges from graph and all refferences to them from verticles' outgoingEdges
+		List<Edge> edgesToRemove = new ArrayList<Edge>();
+		for (Edge e : graph.getEdges()) 
+			if (removedVerticles.contains(e.getSource().getName()) 
+					|| removedVerticles.contains(e.getTarget().getName())) {
+				//mark edge to be removed from graph
+				edgesToRemove.add(e);
+				//remove edge from source vertex
+				e.getSource().remove(e);
 			}
-			/** ...including a * */
-			graph.remove(parentBranch.getSource().getVertex());
-			removedVerticles.add(parentBranch.getSource().getVertex().getName());
-			
-			//remove not needed edges from graph and all refferences to them from verticles' outgoingEdges
-			List<Edge> edgesToRemove = new ArrayList<Edge>();
-			for (Edge e : graph.getEdges()) 
-				if (removedVerticles.contains(e.getSource().getName()) 
-						|| removedVerticles.contains(e.getTarget().getName())) {
-					//mark edge to be removed from graph
-					edgesToRemove.add(e);
-					//remove edge from source vertex
-					e.getSource().getOutgoingEdges().remove(e);
-				}
-			//remove all marked edges from graph
-			graph.getEdges().removeAll(edgesToRemove);
-			
-			graph.setSource(parentBranch.getBranchPath().getLeadEdge().getTarget());
-			replacementBasePath = replacementBasePath.subPath(graph.getSource());
-			
-			switch (algorithmType) {
-				case ALGORITHM_TYPE_REPLACEMENT :
-					replacement = new Replacement(graph, replacementBasePath).getReplacement();
-					break;
-				case ALGORITHM_TYPE_CZERPAK :
-					replacement = new CzerpakReplacement(graph, replacementBasePath).getReplacement();
-					break;
-			}
-	
-			if (replacement != null)
-				replacement.setParentEquivalenceClass(this);
-			
+		//remove all marked edges from graph
+		graph.getEdges().removeAll(edgesToRemove);
+		
+		graph.setSource(parentBranch.getBranchPath().getLeadEdge().getTarget());
+		replacementBasePath = replacementBasePath.subPath(graph.getSource());
+		
+		switch (algorithmType) {
+			case ALGORITHM_TYPE_REPLACEMENT :
+				replacement = new Replacement(graph, replacementBasePath).getReplacement();
+				break;
+			case ALGORITHM_TYPE_CZERPAK :
+				replacement = new CzerpakReplacement(graph, replacementBasePath).getReplacement();
+				break;
+		}
+
+		if (replacement != null) {
+			replacement.setParentEquivalenceClass(this);
 			replacement.getEdgesSequence().add(0, parentBranch.getBranchPath().getLeadEdge());
 			replacement.recalculateWeight();
-			
 		}
+	}
+	
+	@Override
+	public Path getShortestPath() {
+		if (replacement == null) computeShortestPath();
 		
 		Path result = parentBranch.getSource().prefixPath().concat(replacement);
 		result.recalculateWeight();
-		
+		result.setParentEquivalenceClass(this);
 		return result;
+	}
+
+	@Override
+	public boolean hasNextPath() {
+		computeShortestPath();
+		
+		if (replacement != null) return true;
+		else return false;
 	}
 }

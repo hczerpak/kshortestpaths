@@ -1,12 +1,15 @@
 package pl.czerpak.model.pbs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pl.czerpak.algorithm.dijkstra.Dijkstra;
 import pl.czerpak.model.graph.DirectedGraph;
 import pl.czerpak.model.graph.Edge;
 import pl.czerpak.model.graph.Path;
+import pl.czerpak.model.graph.Vertex;
 
 public class NodeEquivalenceClass extends EquivalenceClass {
 
@@ -79,12 +82,26 @@ public class NodeEquivalenceClass extends EquivalenceClass {
 			graph.remove(edge);
 			graph.remove(edge.getSource());
 		}
+		
+		Vertex vi;
+		List<Vertex> verticles = graph.getVerticles();
+		Map<Long, Vertex> vertexMap = new HashMap<Long, Vertex>();
+		for (int i = 0; i < verticles.size(); i++) {
+			vi = verticles.get(i);
+			vertexMap.put(vi.getId(), vi);
+		}
+		Map<Long, Edge> edgeMap = new HashMap<Long, Edge>();
+		for (int i = 0; i < graph.getEdges().size(); i++)
+			edgeMap.put(graph.getEdges().get(i).getId(), graph.getEdges().get(i));
+		
 		/** ..., plus all the lead edges that leave from w. * */
 		List<Edge> leadEdges = parentNode.leadEdges();
 		for (int i = 0; i < leadEdges.size(); i++) {
 			edge = leadEdges.get(i);
-			graph.remove(edge);
-			edge.getSource().remove(edge);
+			
+			
+			graph.remove(edgeMap.get(edge.getId()));
+			vertexMap.get(edge.getSource().getId()).remove(edge);
 		}
 		graph.setSource(parentNode.getVertex());
 		/***********************************************************************

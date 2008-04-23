@@ -70,7 +70,7 @@ public class Node {
 	}
 
 	/**
-	 * Zwraca prefixPath powi�zan� z w�z�em u.
+	 * Zwraca prefixPath powiązaną z węzłem u.
 	 * 
 	 * @return
 	 * 

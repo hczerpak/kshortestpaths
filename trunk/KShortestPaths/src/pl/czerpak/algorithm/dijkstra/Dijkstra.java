@@ -76,7 +76,9 @@ public class Dijkstra {
 		Vertex parent = previous.get(target.getName());
 		
 		if (parent == null) return new ArrayList<Edge>();
-
+		else
+			parent = longToVertex.get(parent.getId());
+		
 		Edge fromPreviousToTarget = null;
 		List<Edge> outgoingEdges = parent.getOutgoingEdges();
 
@@ -102,11 +104,14 @@ public class Dijkstra {
 	
 	public Path getShortestPath() {
 		if (shortestPath == null) {
-			shortestPath = new Path();
-			shortestPath.setEdgesSequence(getEdgesSequenceFromRootToVertex(graph.getTarget()));
-			shortestPath.setSource(graph.getSource());
-			shortestPath.setTarget(graph.getTarget());
-			shortestPath.recalculateWeight();
+			Path computed = new Path();
+			computed.setEdgesSequence(getEdgesSequenceFromRootToVertex(graph.getTarget()));
+			computed.setSource(graph.getSource());
+			computed.setTarget(graph.getTarget());
+			computed.recalculateWeight();
+			
+			if (computed.getEdgesSequence().size() > 0)
+				shortestPath = computed;
 		}
 		return shortestPath;
 	}

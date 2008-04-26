@@ -9,22 +9,24 @@ import pl.czerpak.algorithm.dijkstra.Dijkstra;
 import pl.czerpak.model.graph.DirectedGraph;
 import pl.czerpak.model.graph.Edge;
 import pl.czerpak.model.graph.Path;
-import pl.czerpak.model.graph.Vertex;
 
 public class NodeEquivalenceClass extends EquivalenceClass {
 
 	private Node parentNode;
 	private Path shortestPath = null;
 
-	public NodeEquivalenceClass(AlgorithmType algorithmType, DirectedGraph subgraph, Node parentNode) {
+	public NodeEquivalenceClass(AlgorithmType algorithmType,
+			DirectedGraph subgraph, Node parentNode) {
 		super(algorithmType, subgraph);
 		this.parentNode = parentNode;
 	}
 
 	@Override
 	public void modifyPathBranchingStructure(PathBranchingStructure ti) {
-		if (shortestPath == null) throw new RuntimeException("Create shortest path first. This way shortest path will be lost");
-		
+		if (shortestPath == null)
+			throw new RuntimeException(
+					"Create shortest path first. This way shortest path will be lost");
+
 		/**
 		 * (a) Add a new branch (u, tp) to T that represents the suffix of P
 		 * after u *
@@ -39,7 +41,6 @@ public class NodeEquivalenceClass extends EquivalenceClass {
 		newBranch.setTarget(tpNode);
 		// represents the suffix of P after u
 		newBranch.setBranchPath(shortestPath.subPath(parentNode.getVertex()));
-		
 
 		// Add a new branch (u, tp) to T
 		parentNode.getOutgoingBranches().add(newBranch);
@@ -52,25 +53,29 @@ public class NodeEquivalenceClass extends EquivalenceClass {
 		 * after u and put all of them except P into the newly created
 		 * equivalence class C(u, tp)
 		 **********************************************************************/
-		BranchEquivalenceClass newEqClass = new BranchEquivalenceClass(AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph, shortestPath, newBranch);
+		BranchEquivalenceClass newEqClass = new BranchEquivalenceClass(
+				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph.clone(), shortestPath,
+				newBranch);
 		newBranch.setEquivalenceClass(newEqClass);
 
 		newClasses = new ArrayList<EquivalenceClass>();
 		newClasses.add(newEqClass);
-		
-		shortestPath =  null;
+
+		shortestPath = null;
 	}
 
 	@Override
 	public Path getShortestPath() {
-		if (shortestPath == null) computeShortestPath();
-		
+		if (shortestPath == null)
+			computeShortestPath();
+
 		return shortestPath;
 	}
-	
+
 	private void computeShortestPath() {
-		if (shortestPath != null) return;
-		
+		if (shortestPath != null)
+			return;
+
 		Edge edge;
 		/***********************************************************************
 		 * We obtain graph H by deleting from G all the vertices in
@@ -82,26 +87,26 @@ public class NodeEquivalenceClass extends EquivalenceClass {
 			graph.remove(edge);
 			graph.remove(edge.getSource());
 		}
-		
-		Vertex vi;
-		List<Vertex> verticles = graph.getVerticles();
-		Map<Long, Vertex> vertexMap = new HashMap<Long, Vertex>();
-		for (int i = 0; i < verticles.size(); i++) {
-			vi = verticles.get(i);
-			vertexMap.put(vi.getId(), vi);
-		}
+
 		Map<Long, Edge> edgeMap = new HashMap<Long, Edge>();
 		for (int i = 0; i < graph.getEdges().size(); i++)
-			edgeMap.put(graph.getEdges().get(i).getId(), graph.getEdges().get(i));
-		
+			edgeMap.put(graph.getEdges().get(i).getId(), graph.getEdges()
+					.get(i));
+
 		/** ..., plus all the lead edges that leave from w. * */
 		List<Edge> leadEdges = parentNode.leadEdges();
 		for (int i = 0; i < leadEdges.size(); i++) {
 			edge = leadEdges.get(i);
-			
-			
-			graph.remove(edgeMap.get(edge.getId()));
-			vertexMap.get(edge.getSource().getId()).remove(edge);
+			// translating...
+			edge = edgeMap.get(edge.getId());
+
+			/**
+			 * czyli że co, że już usunięto tą krawędź?
+			 */
+			if (edge != null) {
+				graph.remove(edge);
+				edge.disjoin();
+			}
 		}
 		graph.setSource(parentNode.getVertex());
 		/***********************************************************************
@@ -110,17 +115,19 @@ public class NodeEquivalenceClass extends EquivalenceClass {
 		 **********************************************************************/
 		Dijkstra d = new Dijkstra(graph);
 		shortestPath = d.getShortestPath();
-		
+
 		if (shortestPath != null)
 			shortestPath.setParentEquivalenceClass(this);
 	}
 
 	@Override
 	public boolean hasNextPath() {
-		
+
 		computeShortestPath();
-		
-		if (shortestPath != null) return true;
-		else return false;
+
+		if (shortestPath != null)
+			return true;
+		else
+			return false;
 	}
 }

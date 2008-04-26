@@ -7,6 +7,7 @@ import pl.czerpak.commons.heap.Heap;
 import pl.czerpak.commons.heap.fibonacci.FibonacciHeap;
 import pl.czerpak.model.graph.DirectedGraph;
 import pl.czerpak.model.graph.Path;
+import pl.czerpak.model.pbs.BranchEquivalenceClass;
 import pl.czerpak.model.pbs.EquivalenceClass;
 import pl.czerpak.model.pbs.Node;
 import pl.czerpak.model.pbs.NodeEquivalenceClass;
@@ -72,9 +73,22 @@ public class Hershberger {
 			}
 
 			resultsContainer.add(p);
-			changedOrCreatedClasses.add(p.getParentEquivalenceClass());
+
 
 			EquivalenceClass pClass = p.getParentEquivalenceClass();
+			/**
+			 * EQ właśnie wyekstraktowanej klasy wchodzi do kolejnej iteracji tylko
+			 * jeśli jest to klasa rodzaju węzłowego. Jeśli jest typu gałęziowego
+			 * stara jest dzielona na 4 nowe klasy, które bierzemy pod uwagę,
+			 *  a następnie odrzucana z kolejnych iteracji.
+			 */
+			try {
+				Object o = (BranchEquivalenceClass)pClass;
+			} catch (ClassCastException e) {
+				changedOrCreatedClasses.add(pClass);
+			} finally {
+				//do nothing :)
+			}
 
 			/*******************************************************************
 			 * 2. If P belongs to an equivalence class C(u) for some node u then 

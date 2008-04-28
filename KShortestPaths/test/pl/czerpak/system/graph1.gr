@@ -1,0 +1,18 @@
+p sp 11 15
+c graph contains 11 nodes and 15 arcs
+c
+a node1 node0 1
+a node3 node0 2
+a node9 node1 3
+a node2 node1 4
+a node4 node3 5
+a node4 node2 6
+a node5 node4 7
+a node3 node5 8
+a node7 node5 9
+a node6 node2 10
+a node8 node2 11
+a node7 node6 12
+a node8 node7 13
+a node9 node8 14
+a node10 node9 15

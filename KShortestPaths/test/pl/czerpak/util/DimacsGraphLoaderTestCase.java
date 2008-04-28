@@ -14,7 +14,9 @@ public class DimacsGraphLoaderTestCase extends TestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		graphLoader = new DimacsGraphLoader("USA-road-d.NY.gr");
+		ShortestPathProblemDescription problemDescription = new ShortestPathProblemDescription(
+				"USA-road-d.NY.gr", "", "", "", "", 0);
+		graphLoader = new DimacsGraphLoader(problemDescription);
 	}
 
 	@After

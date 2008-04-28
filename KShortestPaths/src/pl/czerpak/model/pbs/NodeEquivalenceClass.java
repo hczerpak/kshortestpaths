@@ -54,7 +54,7 @@ public class NodeEquivalenceClass extends EquivalenceClass {
 		 * equivalence class C(u, tp)
 		 **********************************************************************/
 		BranchEquivalenceClass newEqClass = new BranchEquivalenceClass(
-				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph.clone(), shortestPath,
+				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph, shortestPath,
 				newBranch);
 		newBranch.setEquivalenceClass(newEqClass);
 

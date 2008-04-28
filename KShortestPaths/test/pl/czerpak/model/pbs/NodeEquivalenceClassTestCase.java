@@ -30,8 +30,8 @@ public class NodeEquivalenceClassTestCase extends TestCase {
 		Path path = eq.getShortestPath();
 		List<Edge> edges = path.getEdgesSequence();
 		
-		assertEquals(g.getVerticles().get(0).getName(), edges.get(0).getSource().getName());
-		assertEquals(g.getVerticles().get(2).getName(), edges.get(0).getTarget().getName());
+		assertEquals(g.getVerticles().get(0).getId(), edges.get(0).getSource().getId());
+		assertEquals(g.getVerticles().get(2).getId(), edges.get(0).getTarget().getId());
 		assertEquals(2, edges.size());
 		assertEquals(1., edges.get(0).getWeight());
 		assertEquals(2., edges.get(1).getWeight());
@@ -53,7 +53,7 @@ public class NodeEquivalenceClassTestCase extends TestCase {
 		assertEquals(1, ti.getBranches().size());
 		assertEquals(2, ti.getNodes().size());
 		assertEquals(s.getName(), ti.getBranches().iterator().next().getSource().getName());
-		assertEquals(g.getTarget().getName(), ti.getBranches().iterator().next().getTarget().getVertex().getName());
+		assertEquals(g.getTarget().getId(), ti.getBranches().iterator().next().getTarget().getVertex().getId());
 		
 		Path branchPath = ti.getBranches().iterator().next().getBranchPath();
 
@@ -69,8 +69,8 @@ public class NodeEquivalenceClassTestCase extends TestCase {
 		
 		assertEquals(AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, eq.algorithmType);
 		assertEquals(ModelLocator.getDirectedGraph().getEdges().size(), eq.graph.getEdges().size());
-		assertEquals(ModelLocator.getDirectedGraph().getSource().getName(), eq.graph.getSource().getName());
-		assertEquals(ModelLocator.getDirectedGraph().getTarget().getName(), eq.graph.getTarget().getName());
+		assertEquals(ModelLocator.getDirectedGraph().getSource().getId(), eq.graph.getSource().getId());
+		assertEquals(ModelLocator.getDirectedGraph().getTarget().getId(), eq.graph.getTarget().getId());
 	}
 
 }

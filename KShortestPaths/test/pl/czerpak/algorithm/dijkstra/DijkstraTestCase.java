@@ -65,10 +65,10 @@ public class DijkstraTestCase extends TestCase {
 		
 		Dijkstra dijkstra = new Dijkstra(graph);
 
-		assertEquals(3., dijkstra.getDistances().get(vs.get(7).getName()));
-		assertEquals(6., dijkstra.getDistances().get(vs.get(6).getName()));
-		assertEquals(3., dijkstra.getDistances().get(vs.get(4).getName()));
-		assertEquals(3., dijkstra.getDistances().get(vs.get(5).getName()));
+		assertEquals(3., dijkstra.getDistances().get(vs.get(7).getId()));
+		assertEquals(6., dijkstra.getDistances().get(vs.get(6).getId()));
+		assertEquals(3., dijkstra.getDistances().get(vs.get(4).getId()));
+		assertEquals(3., dijkstra.getDistances().get(vs.get(5).getId()));
 	}
 	
 	public void testGetEdgesSequenceFromRootToVertex() {
@@ -100,8 +100,8 @@ public class DijkstraTestCase extends TestCase {
 		
 		List<Edge> edges = dijkstra.getEdgesSequenceFromRootToVertex(vs.get(6));
 		
-		assertTrue(vs.get(0).getName().equals(edges.get(0).getSource().getName()));
-		assertTrue(vs.get(1).getName().equals(edges.get(0).getTarget().getName()));
+		assertTrue(vs.get(0).getId()==edges.get(0).getSource().getId());
+		assertTrue(vs.get(1).getId()==edges.get(0).getTarget().getId());
 		assertEquals(3, edges.size());
 		assertEquals(1., edges.get(0).getWeight());
 		assertEquals(2., edges.get(1).getWeight());
@@ -110,8 +110,8 @@ public class DijkstraTestCase extends TestCase {
 		Path path = dijkstra.getShortestPath();
 		edges = path.getEdgesSequence();
 		
-		assertTrue(vs.get(0).getName().equals(edges.get(0).getSource().getName()));
-		assertTrue(vs.get(2).getName().equals(edges.get(0).getTarget().getName()));
+		assertTrue(vs.get(0).getId()==edges.get(0).getSource().getId());
+		assertTrue(vs.get(2).getId()==edges.get(0).getTarget().getId());
 		assertEquals(2, edges.size());
 		assertEquals(1., edges.get(0).getWeight());
 		assertEquals(2., edges.get(1).getWeight());
@@ -124,11 +124,11 @@ public class DijkstraTestCase extends TestCase {
 		
 		SPT_Base spiderX = new SPT_Base(new Dijkstra(graph));
 
-		assertEquals(graph.getSource().getName(), spiderX.getRoot().getVertex().getName());
+		assertEquals(graph.getSource().getId(), spiderX.getRoot().getVertex().getId());
 		
 		Sink sink = new Sink(new Dijkstra(graph.clone().reverseEdges()));
 		
-		assertEquals(graph.getTarget().getName(), sink.getRoot().getVertex().getName());
+		assertEquals(graph.getTarget().getId(), sink.getRoot().getVertex().getId());
 		assertEquals(2, sink.getPathFrom(graph.getVerticles().get(8)).getLength());
 		assertEquals(1, sink.getPathFrom(graph.getVerticles().get(9)).getLength());
 	}

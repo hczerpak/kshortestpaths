@@ -16,18 +16,17 @@ public abstract class EquivalenceClass {
 	protected DirectedGraph graph;
 	
 	protected List<EquivalenceClass> newClasses;
+	
+	protected DirectedGraph originalGraph;
 
 	public EquivalenceClass(AlgorithmType algorithmType, DirectedGraph graph) {
 		this.algorithmType = algorithmType;
-		this.graph = graph;
+		this.originalGraph = graph;
+		this.graph = graph.clone();
 	}
 	
 	public List<EquivalenceClass> getNewEquivalenceClasses() {
 		return newClasses;
-	}
-	
-	public DirectedGraph getGraphCopy() {
-		return graph.clone();
 	}
 	
 	public abstract Path getShortestPath();
@@ -35,4 +34,8 @@ public abstract class EquivalenceClass {
 	public abstract void modifyPathBranchingStructure(PathBranchingStructure pbs);
 	
 	public abstract boolean hasNextPath();
+	
+	public DirectedGraph getGraph() {
+		return graph;
+	}
 }

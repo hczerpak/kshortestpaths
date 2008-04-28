@@ -43,8 +43,8 @@ public class PathTestCase extends TestCase {
 
 	public void testGetLeadEdge() {
 
-		assertEquals(p.getEdgesSequence().get(0).getSource().getName(), p.getLeadEdge().getSource().getName());
-		assertEquals(p.getEdgesSequence().get(0).getTarget().getName(), p.getLeadEdge().getTarget().getName());
+		assertEquals(p.getEdgesSequence().get(0).getSource().getId(), p.getLeadEdge().getSource().getId());
+		assertEquals(p.getEdgesSequence().get(0).getTarget().getId(), p.getLeadEdge().getTarget().getId());
 		assertEquals(p.getEdgesSequence().get(0).getWeight(), p.getLeadEdge().getWeight());
 	}
 

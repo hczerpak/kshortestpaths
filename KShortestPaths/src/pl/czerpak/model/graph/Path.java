@@ -104,7 +104,7 @@ public class Path {
 	}
 
 	public String toString() {
-		return "Path" + id + " | source: " + source.getName() + " target: " + target.getName();
+		return "Path" + id + " | source: " + source + " target: " + target;
 	}
 
 	public Path clone() {
@@ -266,5 +266,25 @@ public class Path {
 		translated.target = vertexMap.get(target.getId());
 		
 		return translated;
+	}
+	
+	public String toXMLString() {
+		StringBuffer buffer = new StringBuffer();
+		
+		buffer.append("<path>\n");
+		for (int j = 0; j < edgesSequence.size(); j++){
+			Edge e = edgesSequence.get(j);
+			buffer
+				.append("<edge weight=\"")
+				.append(e.getWeight().intValue())
+				.append("\" fromID=\"")
+				.append(e.getSource().toString())
+				.append("\" toID=\"")
+				.append(e.getTarget().toString())
+				.append("\" />\n");
+		}
+		buffer.append("</path>\n");
+		
+		return buffer.toString();
 	}
 }

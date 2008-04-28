@@ -24,25 +24,25 @@ public class SPT_Base {
 
 		Vertex v, u;
 		DijkstraTreeElement element, previousElement;
-		Map<String, DijkstraTreeElement> elements = new HashMap<String, DijkstraTreeElement>();
+		Map<Long, DijkstraTreeElement> elements = new HashMap<Long, DijkstraTreeElement>();
 		Vertex source = dijkstra.getGraph().getSource();
 
 		root = new DijkstraTreeElement(source);
-		elements.put(source.getName(), root);
+		elements.put(source.getId(), root);
 		for (int i = 0; i < dijkstra.getGraph().getVerticles().size(); i++) {
 			v = dijkstra.getGraph().getVerticles().get(i);
-			element = elements.get(v.getName());
+			element = elements.get(v.getId());
 			if (element == null) {
 				element = new DijkstraTreeElement(v);
-				elements.put(v.getName(), element);
+				elements.put(v.getId(), element);
 			}
 
-			u = dijkstra.getPrevious().get(v.getName());
+			u = dijkstra.getPrevious().get(v.getId());
 			if (u != null) {
-				previousElement = elements.get(u.getName());
+				previousElement = elements.get(u.getId());
 				if (previousElement == null) {
 					previousElement = new DijkstraTreeElement(u);
-					elements.put(u.getName(), previousElement);
+					elements.put(u.getId(), previousElement);
 				}
 
 				previousElement.getChildren().add(element);
@@ -56,6 +56,6 @@ public class SPT_Base {
 	}
 
 	public Double getDistance(Vertex vertex) {
-		return dijkstra.getDistances().get(vertex.getName());
+		return dijkstra.getDistances().get(vertex.getId());
 	}
 }

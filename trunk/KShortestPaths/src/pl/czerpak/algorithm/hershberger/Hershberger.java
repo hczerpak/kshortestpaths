@@ -42,7 +42,9 @@ public class Hershberger {
 		s.setVertex(graph.getSource());
 		// There is one equivalence class C(s) initially, which corresponds to
 		// all s-t paths.
-		EquivalenceClass initialEquivalenceClass = new NodeEquivalenceClass(EquivalenceClass.AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph, s);
+		EquivalenceClass initialEquivalenceClass = new NodeEquivalenceClass(
+				EquivalenceClass.AlgorithmType.ALGORITHM_TYPE_REPLACEMENT,
+				graph, s);
 
 		// Initialize path branching structure T...
 		ti = new PathBranchingStructure();
@@ -52,7 +54,8 @@ public class Hershberger {
 		// and put path(s, t)...
 		Path shortest = initialEquivalenceClass.getShortestPath();
 		// ...in the heap
-		heap.put(shortest, shortest.getWeight());
+		if (shortest != null)
+			heap.put(shortest, shortest.getWeight());
 
 		// zmienna potrzebna w kroku czwartym
 		List<EquivalenceClass> changedOrCreatedClasses = new ArrayList<EquivalenceClass>();
@@ -72,26 +75,25 @@ public class Hershberger {
 				break;
 			}
 
-			resultsContainer.add(p);
-
+			resultsContainer.add(p.translate(graph));
 
 			EquivalenceClass pClass = p.getParentEquivalenceClass();
 			/**
-			 * EQ właśnie wyekstraktowanej klasy wchodzi do kolejnej iteracji tylko
-			 * jeśli jest to klasa rodzaju węzłowego. Jeśli jest typu gałęziowego
-			 * stara jest dzielona na 4 nowe klasy, które bierzemy pod uwagę,
-			 *  a następnie odrzucana z kolejnych iteracji.
+			 * EQ właśnie wyekstraktowanej klasy wchodzi do kolejnej iteracji
+			 * tylko jeśli jest to klasa rodzaju węzłowego. Jeśli jest typu
+			 * gałęziowego stara jest dzielona na 4 nowe klasy, które bierzemy
+			 * pod uwagę, a następnie odrzucana z kolejnych iteracji.
 			 */
 			try {
-				Object o = (BranchEquivalenceClass)pClass;
+				((BranchEquivalenceClass) pClass).toString();
 			} catch (ClassCastException e) {
 				changedOrCreatedClasses.add(pClass);
 			} finally {
-				//do nothing :)
+				// do nothing :)
 			}
 
 			/*******************************************************************
-			 * 2. If P belongs to an equivalence class C(u) for some node u then 
+			 * 2. If P belongs to an equivalence class C(u) for some node u then
 			 * 3. Else (P belongs to the equivalence class C(u, v) for some
 			 * branch (u, v))
 			 ******************************************************************/
@@ -113,6 +115,7 @@ public class Hershberger {
 			changedOrCreatedClasses.clear();
 		}
 
-		System.out.println("PathBranchingStructure ok: \n" + ti.toString() + "\n\n");
+		System.out.println("PathBranchingStructure ok: \n" + ti.toString()
+				+ "\n\n");
 	}
 }

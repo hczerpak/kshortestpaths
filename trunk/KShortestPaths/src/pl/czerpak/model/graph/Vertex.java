@@ -3,8 +3,6 @@ package pl.czerpak.model.graph;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-
 public class Vertex implements Cloneable {
 	
 	private static int counter = 0;
@@ -12,6 +10,8 @@ public class Vertex implements Cloneable {
 	private long id;
 
 	private List<Edge> outgoingEdges;
+	
+	private String name;
 
 	public Vertex() {
 		outgoingEdges = new ArrayList<Edge>();
@@ -21,6 +21,7 @@ public class Vertex implements Cloneable {
 	public Vertex(String name) {
 		this.outgoingEdges = new ArrayList<Edge>();
 		id = counter++;
+		this.name = name;
 	}
 	
 	private Vertex(long id) {
@@ -28,6 +29,10 @@ public class Vertex implements Cloneable {
 		this.id = id;
 	}
 
+	public boolean add(Edge edge) {
+		return outgoingEdges.add(edge);
+	}
+	
 	public void remove(Edge edge) {
 		outgoingEdges.remove(edge);
 	}
@@ -38,15 +43,6 @@ public class Vertex implements Cloneable {
 
 	public void setOutgoingEdges(List<Edge> outgoingEdges) {
 		this.outgoingEdges = outgoingEdges;
-	}
-
-	public String getName() {
-		return "Vertex" + id;
-	}
-	
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this);
 	}
 
 	public long getId() {
@@ -74,5 +70,9 @@ public class Vertex implements Cloneable {
 		
 		return false;
 	}
-	
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

@@ -23,8 +23,8 @@ import pl.czerpak.model.graph.Vertex;
 public class Dijkstra {
 
 	// TODO: wywalić dist??
-	private Map<String, Double> distances = new HashMap<String, Double>();
-	private Map<String, Vertex> previous = new HashMap<String, Vertex>();
+	private Map<Long, Double> distances = new HashMap<Long, Double>();
+	private Map<Long, Vertex> previous = new HashMap<Long, Vertex>();
 	private Map<Long, Vertex> longToVertex = new HashMap<Long, Vertex>();
 
 	private DirectedGraph graph;
@@ -43,10 +43,10 @@ public class Dijkstra {
 			v = graph.getVerticles().get(i);
 			longToVertex.put(v.getId(), v); //trick tlumaczacy idiki na instancje węzłów bo poslugujemy sie idkami wezlow a nie instancjami, moze byc kilka instancji jednego wezla w trakcie obliczen i one wszystkie wskazuja ten sam wezel w oryginalnym grafie
 			q.put(v.getId(), Double.POSITIVE_INFINITY);
-			distances.put(v.getName(), Double.POSITIVE_INFINITY);
+			distances.put(v.getId(), Double.POSITIVE_INFINITY);
 		}
 
-		distances.put(graph.getSource().getName(), 0.0);
+		distances.put(graph.getSource().getId(), 0.0);
 		q.update(graph.getSource().getId(), 0.0);
 
 		Vertex u;
@@ -60,12 +60,12 @@ public class Dijkstra {
 			for (int i = 0; i < u.getOutgoingEdges().size(); i++) {
 				edge = u.getOutgoingEdges().get(i);
 				v = edge.getTarget();
-				alt = distances.get(u.getName()) + edge.getWeight();
-				if (alt < distances.get(v.getName())) {
-					distances.put(v.getName(), alt);
+				alt = distances.get(u.getId()) + edge.getWeight();
+				if (alt < distances.get(v.getId())) {
+					distances.put(v.getId(), alt);
 					q.update(v.getId(), alt);
 
-					previous.put(v.getName(), u);
+					previous.put(v.getId(), u);
 				}
 			}
 			s.add(u);
@@ -73,7 +73,7 @@ public class Dijkstra {
 	}
 
 	public List<Edge> getEdgesSequenceFromRootToVertex(Vertex target) {
-		Vertex parent = previous.get(target.getName());
+		Vertex parent = previous.get(target.getId());
 		
 		if (parent == null) return new ArrayList<Edge>();
 		else
@@ -94,7 +94,7 @@ public class Dijkstra {
 		List<Edge> edgesSequence = getEdgesSequenceFromRootToVertex(parent);
 
 		if (fromPreviousToTarget == null)
-			throw new NullPointerException("There should be pathe connecting " + graph.getSource().getName() + " and " + target.getName());
+			throw new NullPointerException("There should be pathe connecting " + graph.getSource() + " and " + target);
 
 		// dodaj znalezioną krawędź do listy
 		edgesSequence.add(fromPreviousToTarget);
@@ -116,11 +116,11 @@ public class Dijkstra {
 		return shortestPath;
 	}
 
-	public Map<String, Double> getDistances() {
+	public Map<Long, Double> getDistances() {
 		return distances;
 	}
 
-	public Map<String, Vertex> getPrevious() {
+	public Map<Long, Vertex> getPrevious() {
 		return previous;
 	}
 

@@ -25,7 +25,7 @@ public class BranchEquivalenceClassTestCase extends TestCase {
 		
 		BranchEquivalenceClass eq2 = new BranchEquivalenceClass(
 				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, 
-				eq.getGraphCopy(), 
+				eq.getGraph(), 
 				eq.getShortestPath(), 
 				ti.getBranches().iterator().next());
 		
@@ -33,8 +33,8 @@ public class BranchEquivalenceClassTestCase extends TestCase {
 		
 		List<Edge> edges = shortestPath.getEdgesSequence();
 		
-		assertEquals(g.getVerticles().get(0).getName(), edges.get(0).getSource().getName());
-		assertEquals(g.getVerticles().get(2).getName(), edges.get(1).getTarget().getName());
+		assertEquals(g.getVerticles().get(0).getId(), edges.get(0).getSource().getId());
+		assertEquals(g.getVerticles().get(2).getId(), edges.get(1).getTarget().getId());
 		assertEquals(5, edges.size());
 		assertEquals(1., edges.get(0).getWeight());
 		assertEquals(4., edges.get(1).getWeight());
@@ -55,7 +55,7 @@ public class BranchEquivalenceClassTestCase extends TestCase {
 		
 		EquivalenceClass eq2 = new BranchEquivalenceClass(
 				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, 
-				eq.getGraphCopy(), 
+				eq.graph, 
 				eq.getShortestPath(), 
 				ti.getBranches().iterator().next());
 		
@@ -80,8 +80,8 @@ public class BranchEquivalenceClassTestCase extends TestCase {
 		
 		assertEquals(AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, eq.algorithmType);
 		assertEquals(ModelLocator.getDirectedGraph().getEdges().size(), eq.graph.getEdges().size());
-		assertEquals(ModelLocator.getDirectedGraph().getSource().getName(), eq.graph.getSource().getName());
-		assertEquals(ModelLocator.getDirectedGraph().getTarget().getName(), eq.graph.getTarget().getName());
+		assertEquals(ModelLocator.getDirectedGraph().getSource().getId(), eq.graph.getSource().getId());
+		assertEquals(ModelLocator.getDirectedGraph().getTarget().getId(), eq.graph.getTarget().getId());
 	}
 
 }

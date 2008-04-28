@@ -12,7 +12,12 @@ public class FibonacciHeap<T> implements Heap<T> {
 
 	@SuppressWarnings("unchecked")
 	public T extractMinimumEntry() {
-		T extracted = minimum.getValue();
+		T extracted;
+		
+		if (minimum != null)
+			extracted = minimum.getValue();
+		else return null;
+		
 		forest.remove(minimum);
 		for (int i = 0; i < minimum.getChildren().size(); i++) {
 			FibonacciHeapElement<T> childElement = minimum.getChildren().get(i);

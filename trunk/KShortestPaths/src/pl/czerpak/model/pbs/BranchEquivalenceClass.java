@@ -121,19 +121,19 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 		// i znowu redystrybucja jest umowna (nie ma) ponieważ nie mamy
 		// ścieżek jawnie określonych
 		BranchEquivalenceClass equivalenceClassUW = new BranchEquivalenceClass(
-				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph.clone(), pathUW, branchUW);
+				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph, pathUW, branchUW);
 		branchUW.setEquivalenceClass(equivalenceClassUW);
 
 		BranchEquivalenceClass equivalenceClassWV = new BranchEquivalenceClass(
-				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph.clone(), pathWV, branchWV);
+				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph, pathWV, branchWV);
 		branchWV.setEquivalenceClass(equivalenceClassWV);
 
 		BranchEquivalenceClass equivalenceClassWTp = new BranchEquivalenceClass(
-				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph.clone(), pathWTp, branchWTp);
+				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph, pathWTp, branchWTp);
 		branchWTp.setEquivalenceClass(equivalenceClassWTp);
 
 		NodeEquivalenceClass equivalenceClassW = new NodeEquivalenceClass(
-				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph.clone(), wNode);
+				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, graph, wNode);
 
 		newClasses = new ArrayList<EquivalenceClass>();
 		newClasses.add(equivalenceClassUW);
@@ -153,23 +153,23 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 		 * 
 		 * Note: remove all edges containing any of vertex being removed
 		 **********************************************************************/
-		Set<String> removedVerticles = new HashSet<String>();
+		Set<Long> removedVerticles = new HashSet<Long>();
 		Edge edge;
 		Path prefixPath = parentBranch.getSource().prefixPath();
 		for (int i = 0; i < prefixPath.getEdgesSequence().size(); i++) {
 			edge = prefixPath.getEdgesSequence().get(i);
 			graph.remove(edge.getSource());
-			removedVerticles.add(edge.getSource().getName());
+			removedVerticles.add(edge.getSource().getId());
 		}
 		/** ...including a * */
 		graph.remove(parentBranch.getSource().getVertex());
-		removedVerticles.add(parentBranch.getSource().getVertex().getName());
+		removedVerticles.add(parentBranch.getSource().getVertex().getId());
 		
 		//remove not needed edges from graph and all refferences to them from verticles' outgoingEdges
 		List<Edge> edgesToRemove = new ArrayList<Edge>();
 		for (Edge e : graph.getEdges()) 
-			if (removedVerticles.contains(e.getSource().getName()) 
-					|| removedVerticles.contains(e.getTarget().getName())) {
+			if (removedVerticles.contains(e.getSource().getId()) 
+					|| removedVerticles.contains(e.getTarget().getId())) {
 				//mark edge to be removed from graph
 				edgesToRemove.add(e);
 				//remove edge from source vertex
@@ -204,6 +204,7 @@ public class BranchEquivalenceClass extends EquivalenceClass {
 		Path result = parentBranch.getSource().prefixPath().concat(replacement);
 		result.recalculateWeight();
 		result.setParentEquivalenceClass(this);
+		
 		return result;
 	}
 

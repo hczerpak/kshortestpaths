@@ -6,6 +6,7 @@ import pl.czerpak.model.graph.DirectedGraph;
 import pl.czerpak.model.graph.Edge;
 import pl.czerpak.model.graph.Path;
 import pl.czerpak.model.pbs.BranchEquivalenceClass;
+import pl.czerpak.model.pbs.EquivalenceClass;
 import pl.czerpak.model.pbs.Node;
 import pl.czerpak.model.pbs.NodeEquivalenceClass;
 import pl.czerpak.model.pbs.PathBranchingStructure;
@@ -28,7 +29,7 @@ public class ReplacementTestCase extends TestCase {
 		DirectedGraph g = GraphFactory.graph1();
 		s.setVertex(g.getSource());
 	
-		NodeEquivalenceClass eq = new NodeEquivalenceClass(AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, g, s);
+		EquivalenceClass eq = new NodeEquivalenceClass(AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, g, s);
 
 		PathBranchingStructure ti = new PathBranchingStructure();
 		ti.setRoot(s);
@@ -36,7 +37,7 @@ public class ReplacementTestCase extends TestCase {
 		
 		BranchEquivalenceClass eq2 = new BranchEquivalenceClass(
 				AlgorithmType.ALGORITHM_TYPE_REPLACEMENT, 
-				eq.getGraphCopy(), 
+				eq.getGraph(), 
 				eq.getShortestPath(), 
 				ti.getBranches().iterator().next());
 		
@@ -46,8 +47,8 @@ public class ReplacementTestCase extends TestCase {
 		
 		List<Edge> edges = shortestPath.getEdgesSequence();
 		
-		assertEquals(g.getVerticles().get(0).getName(), edges.get(0).getSource().getName());
-		assertEquals(g.getVerticles().get(2).getName(), edges.get(1).getTarget().getName());
+		assertEquals(g.getVerticles().get(0).getId(), edges.get(0).getSource().getId());
+		assertEquals(g.getVerticles().get(2).getId(), edges.get(1).getTarget().getId());
 		assertEquals(5, edges.size());
 		assertEquals(1., edges.get(0).getWeight());
 		assertEquals(4., edges.get(1).getWeight());

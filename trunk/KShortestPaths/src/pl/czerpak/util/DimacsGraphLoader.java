@@ -28,6 +28,10 @@ public class DimacsGraphLoader {
 
 	private int edgesCounter = 0;
 
+	private ShortestPathProblemDescription problemDescription;
+
+	private DirectedGraph result = new DirectedGraph();
+
 	/**
 	 * Quote from http://www.dis.uniroma1.it/~challenge9/download.shtml :
 	 * 
@@ -58,11 +62,14 @@ public class DimacsGraphLoader {
 	 * 
 	 * @param filename
 	 */
-	public DimacsGraphLoader(String filename) {
-		reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(filename)));
+	public DimacsGraphLoader(ShortestPathProblemDescription problemDescription) {
+		this.problemDescription = problemDescription;
+		reader = new BufferedReader(new InputStreamReader(this.getClass()
+				.getResourceAsStream(problemDescription.inputFileName)));
 	}
 
-	public DirectedGraph loadGraph() throws MultipleProblemLinesException, IllegalLineFormatException, EOFException {
+	public DirectedGraph loadGraph() throws MultipleProblemLinesException,
+			IllegalLineFormatException, EOFException {
 		String line = "";
 		try {
 			while ((line = reader.readLine()) != null) {
@@ -77,7 +84,8 @@ public class DimacsGraphLoader {
 				}
 				if (line.startsWith("a")) {
 					if (!problemLineLoaded)
-						throw new IllegalLineFormatException("no problem line found");
+						throw new IllegalLineFormatException(
+								"no problem line found");
 
 					parseArcDescriptiorLine(line);
 					continue;
@@ -94,17 +102,19 @@ public class DimacsGraphLoader {
 		if (edges.size() != edgesCounter)
 			throw new EOFException("Not enough edges (arcs) found");
 
-		DirectedGraph dg = new DirectedGraph();
-		dg.setEdges(edges);
+		result.setEdges(edges);
 		List<Vertex> verticlesList = new ArrayList<Vertex>(verticlesCounter);
 		for (Vertex v : verticles.values())
 			verticlesList.add(v);
 
-		dg.setVerticles(verticlesList);
+		result.setVerticles(verticlesList);
 
-		// System.out.println(dg.toString());
+		if (result.getSource() == null)
+			throw new IllegalArgumentException("Source node " + problemDescription.sourceName + " not found in " + problemDescription.inputFileName);
+		if (result.getTarget() == null)
+			throw new IllegalArgumentException("Target node " + problemDescription.targetName + " not found in " + problemDescription.inputFileName);
 
-		return dg;
+		return result;
 	}
 
 	/**
@@ -113,7 +123,8 @@ public class DimacsGraphLoader {
 	 * @throws IllegalLineFormatException
 	 * 
 	 */
-	private void parseArcDescriptiorLine(String line) throws IllegalLineFormatException {
+	private void parseArcDescriptiorLine(String line)
+			throws IllegalLineFormatException {
 		String tailName, headName;
 		Vertex tail, head;
 		double weight;
@@ -138,61 +149,34 @@ public class DimacsGraphLoader {
 		} else
 			head = verticles.get(headName);
 
-		edges.add(new Edge(head, tail, weight));
+		Edge edge;
+		edges.add(edge = new Edge(head, tail, weight));
+		head.add(edge);
 
+		if (problemDescription != null) {
+			if (result.getSource() == null) {
+				if (headName.equals(problemDescription.sourceName))
+					result.setSource(head);
+				else if (tailName.equals(problemDescription.sourceName))
+					result.setSource(tail);
+			}
+			if (result.getTarget() == null) {
+				if (tailName.equals(problemDescription.targetName))
+					result.setTarget(tail);
+				else if (headName.equals(problemDescription.targetName))
+					result.setTarget(head);
+			}
+		}
 		edgesCounter++;
 	}
 
-	/** implementacja bez string tokenizera * */
-	// private void parseArcDescriptiorLine(String line) throws
-	// IllegalLineFormatException {
-	// String tailName, headName;
-	// Vertex tail, head;
-	// double weight;
-	//		
-	// int pointer = 0;
-	// String buff;
-	//
-	// pointer = line.lastIndexOf(" ");
-	// buff = line.substring(pointer).trim();
-	//		
-	// weight = Double.parseDouble(buff);
-	//		
-	// line = line.substring(0, pointer);
-	//		
-	// pointer = line.lastIndexOf(" ");
-	// buff = line.substring(pointer).trim();
-	//		
-	// headName = buff;
-	//
-	// line = line.substring(0, pointer);
-	// //pointer = line.lastIndexOf(" ");
-	// buff = line.substring(line.lastIndexOf(" ")).trim();
-	//
-	// tailName = buff;
-	//		
-	// if (!verticles.containsKey(tailName)) {
-	// verticles.put(tailName, tail = new Vertex(tailName));
-	// verticlesCounter++;
-	// } else
-	// tail = verticles.get(tailName);
-	//
-	// if (!verticles.containsKey(headName)) {
-	// verticles.put(headName, head = new Vertex(headName));
-	// verticlesCounter++;
-	// } else
-	// head = verticles.get(headName);
-	//
-	// edges.add(new Edge(head, tail, weight));
-	//		
-	// edgesCounter++;
-	// }
 	/**
 	 * p sp n m
 	 * 
 	 * @throws IllegalLineFormatException
 	 */
-	private void parseProblemLine(String line) throws IllegalLineFormatException {
+	private void parseProblemLine(String line)
+			throws IllegalLineFormatException {
 		int n, m;
 
 		StringTokenizer tokenizer = new StringTokenizer(line, " ");
@@ -207,7 +191,7 @@ public class DimacsGraphLoader {
 
 		verticles = new HashMap<String, Vertex>(n);
 
-		// TODO: sprawdzi� szybko�� przy implementacji LinkedList
+		// TODO: sprawdzić szybkość przy implementacji LinkedList
 		edges = new ArrayList<Edge>(m);
 
 		problemLineLoaded = true;

@@ -19,14 +19,14 @@ import pl.czerpak.model.graph.Vertex;
  */
 public class Sink extends SPT_Base {
 
-	private Map<String, Integer> minblocks;
-	private Map<String, Integer> blocks;
+	private Map<Long, Integer> minblocks;
+	private Map<Long, Integer> blocks;
 
 	public Sink(Dijkstra dijkstra) {
 		super(dijkstra);
 
-		this.blocks = new HashMap<String, Integer>();
-		this.minblocks = new HashMap<String, Integer>();
+		this.blocks = new HashMap<Long, Integer>();
+		this.minblocks = new HashMap<Long, Integer>();
 		// blocks have to be computed along shortest paths
 		calculateBlocks();
 		// minblocks are computed down thru shortest path tree
@@ -41,12 +41,12 @@ public class Sink extends SPT_Base {
 
 		DijkstraTreeElement currentElement = root;
 		
-		blocks.put(root.getVertex().getName(), edges.size());
+		blocks.put(root.getVertex().getId(), edges.size());
 
 		// przejść po ścieżce i po kolei dodawać blocki do poddrzew
 		for (int i = 0; i < edges.size(); i++) {
 			Vertex applyBlocksHere = edges.get(i).getTarget();
-			blocks.put(applyBlocksHere.getName(), edges.size() - i);
+			blocks.put(applyBlocksHere.getId(), edges.size() - i);
 			//blocks.put(edges.get(i).getTarget(), edges.size());
 
 			for (int j = 0; j < currentElement.getChildren().size(); j++) {
@@ -61,17 +61,17 @@ public class Sink extends SPT_Base {
 	private void applyBlockNumber(DijkstraTreeElement parent, int blockNumber) {
 		for (DijkstraTreeElement child : parent.getChildren()) {
 			if (blocks.containsKey(child.getVertex())) {
-				if (blocks.get(child.getVertex().getName()) > blockNumber)
-					blocks.put(child.getVertex().getName(), blockNumber);
+				if (blocks.get(child.getVertex().getId()) > blockNumber)
+					blocks.put(child.getVertex().getId(), blockNumber);
 			} else
-				blocks.put(child.getVertex().getName(), blockNumber);
+				blocks.put(child.getVertex().getId(), blockNumber);
 			applyBlockNumber(child, blockNumber);
 		}
 	}
 
 	private void calculateMinBlocks() {
 
-		minblocks.put(root.getVertex().getName(), blocks.get(root.getVertex().getName()));
+		minblocks.put(root.getVertex().getId(), blocks.get(root.getVertex().getId()));
 
 		applyMinblock(root);
 	}
@@ -79,10 +79,10 @@ public class Sink extends SPT_Base {
 	private void applyMinblock(DijkstraTreeElement parent) {
 		for (DijkstraTreeElement treeElement : parent.getChildren()) {
 			minblocks.put(
-					treeElement.getVertex().getName(), 
+					treeElement.getVertex().getId(), 
 					Math.min(
-							blocks.get(treeElement.getVertex().getName()), 
-							minblocks.get(parent.getVertex().getName())));
+							blocks.get(treeElement.getVertex().getId()), 
+							minblocks.get(parent.getVertex().getId())));
 			applyMinblock(treeElement);
 		}
 	}
@@ -94,7 +94,7 @@ public class Sink extends SPT_Base {
 	 * @return
 	 */
 	public boolean isValid(Edge e, int i) {
-		int lowb = minblocks.get(e.getTarget().getName());
+		int lowb = minblocks.get(e.getTarget().getId());
 
 		if (lowb > i)
 			return true;

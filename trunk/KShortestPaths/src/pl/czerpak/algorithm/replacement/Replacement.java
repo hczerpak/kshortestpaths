@@ -62,7 +62,7 @@ public class Replacement {
 			
 			// remove from Ei edges with target set to a
 			for (Edge edge : setEi) {
-				if (edge.getTarget().getName().equals(cutEdge.getSource().getName()))
+				if (edge.getTarget().getId() == cutEdge.getSource().getId())
 					setEi.remove(edge);
 			}
 
